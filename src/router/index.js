@@ -2,6 +2,7 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
 import SingIn from '../views/SingIn.vue'
+import ErrorPage from '../views/ErrorPage.vue'
 
 Vue.use(VueRouter)
 
@@ -11,13 +12,12 @@ const routes = [{
         component: Home,
         props: true,
         beforeEnter: (to, from, next) => {
-            if (to.params.name) {
-                next();
+            if (to.params.userName) {
+                next()
             } else {
-                next({ name: 'singin' })
+                next('/singin')
             }
         }
-
     },
     {
         path: '/singin',
@@ -28,9 +28,6 @@ const routes = [{
         path: '/about',
         name: 'about',
 
-        // route level code-splitting
-        // this generates a separate chunk (about.[hash].js) for this route
-        // which is lazy-loaded when the route is visited.
         component: () =>
             import ( /* webpackChunkName: "about" */ '../views/About.vue')
     },
@@ -39,19 +36,17 @@ const routes = [{
         name: 'singout',
         component: () =>
             import ( /* webpackChunkName: "about" */ '../views/SingOut.vue'),
-        beforeEnter: (to, from, next) => {
-            if (localStorage.username) {
-                localStorage.username = ''
-                next({ name: 'singin' })
-            }
-        }
+    },
+    {
+        path: '*',
+        component: ErrorPage
     }
 ]
 
 const router = new VueRouter({
     mode: 'history',
     base: process.env.BASE_URL,
-    routes
+    routes,
 })
 
 export default router

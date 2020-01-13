@@ -4,15 +4,15 @@
   </section>
 </template>
 
+
 <script>
 export default {
   name: 'singout',
-  updated() {    
-    localStorage.username = ''
-    this.$router
-        .push({
-            name: 'singin',
-            })
-    },
+  created() {
+    //this.$store.state.userName = false
+    //this.$router.push({
+      //name: 'singin',
+    //})
+  },
 }
 </Script>
