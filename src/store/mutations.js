@@ -1,7 +1,6 @@
 import Vue from 'vue'
 
 export default {
-
     changeName(state, messages) {
         state.userName = messages
     },

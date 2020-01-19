@@ -2,6 +2,7 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
 import SingIn from '../views/SingIn.vue'
+import Room from '../views/Room.vue'
 import ErrorPage from '../views/ErrorPage.vue'
 
 Vue.use(VueRouter)
@@ -18,6 +19,11 @@ const routes = [{
                 next('/singin')
             }
         }
+    },
+    {
+        path: '/room',
+        name: 'room',
+        component: Room,
     },
     {
         path: '/singin',

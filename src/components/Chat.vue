@@ -1,54 +1,65 @@
 <template>
     <section class="Chat">
-        <div class="card" >  
-            <div class="card-header">
-                <p class="m-0 h5">Chat for {{ forUser ? forUser : 'All' }}</p>
+        <div class="card">
+            <div class="card-header bg-dark px-3 py-2">
+                <div class="row align-items-center">
+                <div class="col"><span class="h2 font-weight-light text-secondary">Chat </span></div>
+                <div class="col-auto text-muted"><b> 32 </b> / 50  </div>
+                </div>
             </div>
-            <div class="card-body p-3" style="max-height: 60vh; overflow: auto;">
-                <div class="conversation-list" v-for="cm in list" :key="cm.timeStamp">
-                    <div v-if="cm.forUser === ''" class="media mb-3">
-                        <div class="text-center">
-                            <img src="https://coderthemes.com/hyper/creative/assets/images/users/avatar-2.jpg" height="48" class="rounded-circle" alt="Shreyu N">
-                            <div><span class="badge badge-default">{{ cm.userName }}</span></div>
-                        </div>
-                        <div class="media-body">
-                            <div class="ctext-wrap">
-                                <small class="text-monospace text-muted">{{ cm.timeStamp }}</small>
-                                <p>{{ cm.text }}</p>
+            <div class="card-body p-3" style="max-height: 60vh; overflow: auto;" v-chat-scroll="{always: true, smooth: true}">
+                <div v-for="cm in allMessages" :key="cm.timeStamp" class="list-group list-group-flush">
+                    <div v-if="cm.forUser === '' && cm.userName === $route.params.userName" class="list-group-item">
+                        <div class="row align-items-center">
+                            <div class="col-2 text-center">
+                                <img src="https://coderthemes.com/hyper/creative/assets/images/users/avatar-1.jpg" height="48" class="rounded-circle border border-success" alt="Shreyu N">
+                                <div><span class="badge badge-success">{{ cm.userName }}</span></div>
+                            </div>
+                            <div class="col">
+                                <span class="text-monospace small"><small class="float-right">{{ cm.momentStamp }} </small></span>
+                                <p class="pt-2">{{ cm.text }}</p>
                             </div>
                         </div>
                     </div>
-                    <div v-else-if="cm.forUser === newMessage.userName" class="media media-privat mb-3">
-                        <div class="media-body">
-                            <div class="ctext-wrap">
-                                <small class="text-monospace text-muted">{{ cm.timeStamp }}</small>
-                                <p>{{ cm.text }}</p>
+                    <div v-else-if="cm.forUser != '' && cm.userName === $route.params.userName" class="list-group-item">
+                        <div class="row align-items-center">
+                            <div class="col-2 text-center">
+                                <img src="https://coderthemes.com/hyper/creative/assets/images/users/avatar-1.jpg" height="48" class="rounded-circle border border-success" alt="Shreyu N">
+                                <div><span class="badge badge-success">{{ cm.userName }}</span></div>
+                            </div>
+                            <div class="col">
+                                <div class="ptext-wrap w-100">
+                                    <span class="text-monospace small"><small class="float-right">{{ cm.momentStamp }} </small> ► {{ cm.forUser }} </span>
+                                    <p class="pt-2">{{ cm.text }}</p>
+                                </div>
                             </div>
                         </div>
-                        <div class="text-center">
-                            <img src="https://coderthemes.com/hyper/creative/assets/images/users/avatar-2.jpg" height="48" class="rounded-circle" alt="Shreyu N">
-                            <div><span class="badge badge-default">{{ cm.userName }}</span></div>
+                    </div>
+                    <div v-else-if="cm.forUser === '' && cm.userName != $route.params.userName" class="list-group-item">
+                        <div class="row align-items-center">
+                            <div class="col-2 text-center">
+                                <img src="https://coderthemes.com/hyper/creative/assets/images/users/avatar-3.jpg" height="48" class="rounded-circle" alt="Shreyu N">
+                                <div><span class="badge badge-default">{{ cm.userName }}</span></div>
+                            </div>
+                            <div class=" col">
+                                <span class="text-monospace text-muted small"><small class="float-right">{{ cm.momentStamp }}</small></span>
+                                <p class="pt-2">{{ cm.text }}</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div v-else-if="cm.forUser === $route.params.userName && cm.userName != $route.params.userName" class="list-group-item bg-light">
+                        <div class="row align-items-center">
+                            <div class="col-2 text-center">
+                                <img src="https://coderthemes.com/hyper/creative/assets/images/users/avatar-2.jpg" height="48" class="rounded-circle" alt="Shreyu N">
+                                <div><span class="badge badge-default">{{ cm.userName }}</span></div>
+                            </div>
+                            <div class="col">
+                                <span class="text-monospace text-muted small">► for me <small class="float-right">{{ cm.momentStamp }}</small></span>
+                                <p class="pt-2">{{ cm.text }}</p>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="card-footer">                   
-                <form @submit.prevent="sendMessage" name="chat-form" id="chat-form">
-                    <div class="row">
-                        <div class="col mb-2 mb-sm-0">
-                            <input type="hidden" class="mt-2 message-composer w-100" :value="'@' + forUser" />
-                            <textarea class="mt-2 message-composer w-100" v-model="newMessage.text"></textarea>
-                            <div class="invalid-feedback">
-                                Please enter your messsage
-                            </div>
-                        </div>
-                        <div class="col-sm-auto">
-                            <div class="btn-group">                                        
-                                <button type="submit" class="btn btn-primary btn-block">SEND</button>
-                            </div>
-                        </div>
-                    </div>
-                </form>
             </div>
         </div>
     </section>
@@ -56,32 +67,21 @@
 
 <script>
 
-import { mapActions } from 'vuex'
+import { mapGetters, mapActions } from 'vuex'
+//import VueChatScroll from 'vue-chat-scroll'
 
 export default {
-  name: 'Chat',
-  props: ['list', 'forUser'],
-  updated() {
-      this.newMessage.forUser = this.forUser
-  },
-  data() {
-      return {
-          newMessage: {
-            forUser: this.forUser,
-            userName: this.$store.state.userName,
-            text: '',
-          }
-          
-      }
+    name: 'Chat',
+    data() {
+        return {
+            userName: this.$route.params.userName,
+        }
     },
-    methods: mapActions({
-    sendMessage (dispatch) {
-        //alert(JSON.stringify(this.forUser))
-      const { newMessage } = this
-      dispatch('sendMessage', {
-          newMessage
-        })
+    computed: mapGetters(["allMessages"]),
+    methods: mapActions(["fetchMessages"]),
+    async mounted() {
+        this.fetchMessages()
+        
     }
-  })
 }
 </script>

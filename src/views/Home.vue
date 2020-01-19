@@ -2,15 +2,29 @@
   <section class="home">
     <HeaderXo />
     <main class="container-fluid mt-4">
-      <div class="row">
-        <div class="col-4">
-          <RoomList :list="roomsObj" />
+      <div class="row justify-content-center">
+        <div class="col-md-10 col-xl-4 pb-4">
+          <div class="card">
+            <div class="card-header bg-dark px-3 py-2">
+              <div class="row align-items-center">
+                <div class="col"><span class="h2 font-weight-light text-secondary">Room List</span></div>
+                <div class="col-auto px-3"><RoomForm /></div>
+              </div>
+            </div>
+          </div>
+          <RoomList />
         </div>
-        <div class="col-3">
-          <UserList @setPrivatMessageUsers="setPrivatMessageUsers" :list="usersObj" />
+        <div class="col-md-10 col-lg-4 col-xl-3 pb-4">
+          <UserList />
         </div>
-        <div class="col-5">
-          <Chat :list="chatObj" :forUser="forUser" />
+        <div class="col-md-10 col-lg-6 col-xl-5">
+          <Chat />
+          <div class="card">
+            <div class="card-header bg-dark px-3 py-3">
+              <div class="px-3"><ChatForm  /></div>
+            </div>
+          </div>
+          
         </div>
       </div>
     </main>
@@ -20,11 +34,17 @@
 <script>
 // @ is an alias to /src
 import HeaderXo from '@/components/HeaderXo.vue'
+
 import RoomList from '@/components/RoomList.vue'
-import UserList from '@/components/UserList.vue'
+import RoomForm from '@/components/RoomForm.vue'
+
 import Chat from '@/components/Chat.vue'
-import fb from '@/firebase/init'
-import moment from 'moment'
+import ChatForm from '@/components/ChatForm.vue'
+
+import UserList from '@/components/UserList.vue'
+
+//import db from '@/firebase/init'
+//import moment from 'moment'
 
 
 export default {
@@ -33,90 +53,7 @@ export default {
     userName: String
   },
   components: {
-    HeaderXo, RoomList, UserList, Chat
+    HeaderXo, RoomList, RoomForm, UserList, Chat, ChatForm
   },
-  created() {
-
-        fb.collection("chatMessages").onSnapshot( querySnapshot => {
-            
-            let list = []
-
-            
-            
-            querySnapshot.forEach(doc => {
-                list.push({
-                  id: doc.id,
-                  userName: doc.data().userName,
-                  forUser: doc.data().forUser,
-                  text: doc.data().text,
-                  timeStamp: moment(doc.data().timestamp).locale('uk').format('x'),
-                })
-            })
-            this.chatObj = list
-            
-        })
-
-        fb.collection("rooms").orderBy('timeStamp', 'asc').onSnapshot( querySnapshot => {
-            
-            let list = []
-
-            
-            
-            querySnapshot.forEach(doc => {
-                list.push({
-                  id: doc.id,
-                  isOpen: doc.data().isOpen,
-                  playerX: doc.data().playerX,
-                  playerO: doc.data().playerO,
-                  timeStamp: moment(doc.data().timeStamp).locale('uk').format('x'),
-                })
-            })
-            this.roomsObj = list
-            
-        })
-
-        fb.collection("users").onSnapshot( querySnapshot => {
-            
-            let online = [], all = [], obj = {}
-            
-            querySnapshot.forEach(doc => {
-                obj = {
-                  id: doc.id,
-                  name: doc.data().name,
-                  isOnline: doc.data().isOnline,
-                  timeStamp: moment(doc.data().timestamp).locale('uk').format('x'), 
-                }
-                all.push(obj)
-                
-                if (doc.data().isOnline) {
-                  online.push(obj)
-                }
-            })
-            
-            this.usersObj = {
-              all: all,
-              online: online
-            }
-        })
-    },
-  methods: {
-    setPrivatMessageUsers (name) {
-      this.forUser = name
-      //alert(name)
-    }
-  },
-  data() {
-    return {
-      forUser: '',
-      chatObj: [],
-      roomsObj: [],
-      usersObj: {},
-      stepObj: {
-        id: 1,
-        statsGame: [0,0,0,0,0,0,0,0,0],
-        timeStamp: 10,
-      }
-    }
-  }
 }
 </script>

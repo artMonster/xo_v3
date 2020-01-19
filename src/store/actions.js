@@ -9,15 +9,12 @@ export const getAllMessages = ({ commit }) => {
 */
 export const sendMessage = ({ commit }, mess) => {
     commit('receiveMessage', mess)
-    alert(JSON.stringify(mess))
+        //alert(JSON.stringify(mess))
     fb.collection('chatMessages').add({
         userName: mess.newMessage.userName,
         forUser: mess.newMessage.forUser,
         text: mess.newMessage.text,
         timestamp: Date.now()
-    }).catch(err => {
-        //console.log(err);
-        alert(err)
     })
 
     /*  

@@ -8,6 +8,11 @@
                 <a class="nav-link" :href="href" @click="navigate">Lobby</a>
               </li>
             </router-link>
+            <router-link to="/room" v-slot="{ href, route, navigate, isActive, isExactActive }">
+              <li :class="[isActive && 'nav-item router-link-active', isExactActive && 'nav-item router-link-exact-active']">
+                <a class="nav-link" :href="href" @click="navigate">Room</a>
+              </li>
+            </router-link>
             <router-link to="/about" v-slot="{ href, route, navigate, isActive, isExactActive }">
               <li :class="[isActive && 'nav-item router-link-active', isExactActive && 'nav-item router-link-exact-active']">
                 <a class="nav-link" :href="href" @click="navigate">About</a>
@@ -40,7 +45,7 @@ export default {
   name: 'HeaderXo',
   data() {
     return {
-      userName: this.$store.state.userName,
+      userName: this.$route.params.userName,
       userPic: 'https://coderthemes.com/hyper/creative/assets/images/users/avatar-2.jpg'
     }
   }
