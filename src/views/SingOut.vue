@@ -9,10 +9,10 @@
 export default {
   name: 'singout',
   created() {
-    //this.$store.state.userName = false
-    //this.$router.push({
-      //name: 'singin',
-    //})
+    this.$store.dispatch('logout')
+    this.$router.push({
+        name: 'singin',
+    })
   },
 }
 </Script>

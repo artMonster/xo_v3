@@ -5,6 +5,7 @@ import { BootstrapVue, IconsPlugin } from 'bootstrap-vue'
 import App from './App.vue'
 import router from './router'
 import store from './store'
+import { auth } from '@/firebase/init'
 
 Vue.config.productionTip = false
 
@@ -15,8 +16,14 @@ Vue.use(VueChatScroll)
 
 Vue.config.debug = true
 
-new Vue({
-    store,
-    router,
-    render: h => h(App),
-}).$mount('#app')
+let app
+
+auth.onAuthStateChanged((user) => {
+    if (!app) {
+        app = new Vue({
+            router,
+            store,
+            render: h => h(App),
+        }).$mount('#app')
+    }
+})

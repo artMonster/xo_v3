@@ -1,12 +1,16 @@
 <template>
-    <div class="board">
-        <form @submit.prevent="submit" class="pt-4">
+    <div class="board bg-dark">
+        <form @submit.prevent="submit" >
             <div class="form-group">
-                <dl class="row align-items-center justify-content-center text-center m-0">
-                    <dd v-for="(state, index) of boardState" :key="index" class="col-4 text-center py-4">
-                        <div class="custom-control custom-radio">
-                            <input type="radio" class="custom-control-input" :id="index+1" name="radio" :value="index+1" v-model="stepValue">
-                            <label class="custom-control-label" :for="index+1"></label>
+                <dl class="row align-items-center justify-content-center text-center p-3">
+                    <dd v-for="(cell, index) of curentCells" :key="index" class="col-4 text-center">
+                        <div v-if="cell" class="custom-control custom-radio" :class="taggedCell[index] ? 'border-success' : '' ">
+                            <input type="radio" class="custom-control-input" :id="'ch_'+index" name="radio" :value="index" v-model="checkCell" />
+                            <label class="custom-control-label text-light" :for="'ch_'+index">{{ stride }}</label>
+                        </div>
+                        <div v-else class="custom-control custom-radio" :class="taggedCell[index] ? 'border-success' : '' ">
+                            <input @click="checkedStep({s: index, cells: curentCells})" type="radio" class="custom-control-input" :id="'ch_'+index" name="radio" :value="index" v-model="checkCell" />
+                            <label class="custom-control-label text-light" :for="'ch_'+index">{{ checkedCoin[index] }}</label>
                         </div>
                     </dd>
                 </dl>
@@ -19,27 +23,26 @@
 </template>
 
 <script>
-import { mapMutations } from 'vuex'
 
+import { mapGetters, mapActions } from 'vuex'
 export default {
     name: 'Board',
-    data() {
-        return {
-            boardState: [0,0,0,0,0,0,0,0,0],
-            stepValue: 0,
-            errorText: null
+    computed: mapGetters(['checkedCell', 'checkedCoin', 'curentCells', 'taggedCell', 'gameInfo']),
+    methods: {
+        ...mapActions(['nextStep', 'checkedStep']),
+        submit() {
+            this.nextStep({s: index})
         }
     },
-    methods: {
-      ...mapMutations(['createRoom']),
-      submit() {
-          this.createRoom({
-              title: this.title,
-              body: this.body,
-              id: Date.now()
-          })
-      }
-    }
+    mounted() {
+        this.stride = this.gameInfo.stride
+    },
+    data() {
+        return {
+            checkCell: false,
+            stride: 'x',
+        }
+    },
 }
-</script>
 
+</script>

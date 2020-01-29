@@ -1,6 +1,6 @@
 <template>
     <div>
-        <form @submit.stop.prevent="submit" ref="form"  class="row justify-content-end align-itens-center" name="chat-form">
+        <form @submit.stop.prevent="submit"  class="row justify-content-end align-itens-center" name="chat-form">
             <input type="hidden" class="form-control btn-lg mt-2 message-composer w-100" v-model="forUser"  />
             <div class="form-group col-sm-9">
                 <textarea class="form-control btn-lg mt-2 message-composer w-100" v-model="text" required></textarea>
@@ -14,49 +14,50 @@
 
 <script>
 
-import { mapMutations } from 'vuex'
+import { mapActions , mapMutations, mapGetters } from 'vuex'
 
 
 export default {
     name: 'ChatForm',
     data() {
         return {
+            itsme: 'this.me',
             text: '',
-            userName: this.$route.params.userName,
             forUser: '',
             submittedNames: [],
             textState: null,
         }
     },
     methods: {
-        ...mapMutations(['createMessage']),
-        checkFormValidity() {
-            let valid = this.$refs.form.checkValidity()
-            this.textState = valid && this.text.length > 3 && this.text.length < 256
-            return valid && this.text.length > 3 && this.text.length < 256 ? true : false
-        },
-        resetModal() {
-            this.text = ''
-            this.timeStamp =  ''
-            this.forUser = ''
-            this.textState = null
-        },      
+        ...mapActions(['setMessagesAction']),   
         submit() {
 
-            if (!this.checkFormValidity()) {
-                return
-            }
-            this.createMessage({
-                userName: this.userName,
+
+            this.setMessagesAction({
+                userName: this.itsme,
                 forUser: this.forUser,
                 text: this.text,
                 timeStamp: Date.now(),
                 momentStamp: Date.now(),
                 id: ''+Date.now()+'',
             })
-            this.resetModal()
             
         }
     }
+//     methods: mapActions({
+//     sendMessage (dispatch) {
+        
+//       const { text, forUser } = this
+//       if ( text.trim() ) {
+//           dispatch('addMessage', {
+//           text,
+//           forUser
+//         })
+//         this.text = ''
+//         this.forUser = ''
+//       }
+//     }
+//   }),
+
 }
 </script>

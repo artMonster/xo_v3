@@ -1,51 +1,57 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import Home from '../views/Home.vue'
-import SingIn from '../views/SingIn.vue'
-import Room from '../views/Room.vue'
-import ErrorPage from '../views/ErrorPage.vue'
 
 Vue.use(VueRouter)
 
 const routes = [{
         path: '/',
         name: 'home',
-        component: Home,
-        props: true,
-        beforeEnter: (to, from, next) => {
-            if (to.params.userName) {
-                next()
-            } else {
-                next('/singin')
-            }
-        }
+        meta: { layout: 'main' },
+        component: () =>
+            import ('@/views/Home.vue')
+    },
+    {
+        path: '/game',
+        name: 'game',
+        meta: { layout: 'main' },
+        component: () =>
+            import ('@/views/Game.vue')
     },
     {
         path: '/room',
         name: 'room',
-        component: Room,
-    },
-    {
-        path: '/singin',
-        name: 'singin',
-        component: SingIn,
+        meta: { layout: 'main' },
+        props: true,
+        component: () =>
+            import ('@/views/Room.vue')
     },
     {
         path: '/about',
         name: 'about',
-
+        meta: { layout: 'main' },
         component: () =>
-            import ( /* webpackChunkName: "about" */ '../views/About.vue')
+            import ('@/views/About.vue')
+    },
+    {
+        path: '/singin',
+        name: 'singin',
+        meta: { layout: 'empty' },
+        component: () =>
+            import ('@/views/SingIn.vue')
+    },
+    {
+        path: '/register',
+        name: 'register',
+        meta: { layout: 'empty' },
+        component: () =>
+            import ('@/views/About.vue')
     },
     {
         path: '/singout',
         name: 'singout',
+        meta: { layout: 'empty' },
         component: () =>
-            import ( /* webpackChunkName: "about" */ '../views/SingOut.vue'),
-    },
-    {
-        path: '*',
-        component: ErrorPage
+            import ('@/views/SingOut.vue'),
     }
 ]
 

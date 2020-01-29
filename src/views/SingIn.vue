@@ -1,15 +1,15 @@
 <template>
-  <section class="singin">
+    <section class="singin">
         <div class="container">
             <div class="row align-items-center justify-content-center">
                 <div class="col-md-6 col-lg-4">
                     <div class="card mt-5">
                         <div class="card-body">
-                            <p class="h4 text-center ">Create player name</p>
-                            <form @submit.prevent="singIn" class="text-center p-4">
+                            <p class="h4 text-center ">Auth</p>
+                            <form  @submit.prevent="submitHandler" class="text-center p-4">
                                 <div class="form-group">
-                                    <input autofocus type="text" class="form-control"  name="name" v-model="name">
-                                    <p v-if="errorText" class="text-danger">{{ errorText }}</p>
+                                    <input autofocus type="email" class="form-control" name="email" v-model="email" required>
+                                    <input type="password" class="form-control"  name="pass" v-model="pass" required>
                                 </div>
                                 <button type="submit" class="btn btn-primary btn-lg btn-block">Enter</button>
                             </form>
@@ -18,50 +18,30 @@
                 </div>
             </div>
         </div>
-  </section>
+    </section>
 </template>
 
 <script>
 
 export default {
-  name: 'singin',
-  data () {
-        return {
-            name: '',
-            errorText: null,
-        }
-    },
-    created() {
-/*        
-        if (this.$store.state.userName) {
-            this.$router
-                .push({
-                    name: 'home',
-                    params: { 
-                        name: this.$store.state.userName,
-                        }
-                    })
-        }*/
-    }, 
+    name: 'singin',
+    data: () => ({
+        email: 'test@test.com',
+        pass: '123456',
+    }),
     methods: {
-        singIn() {
-            
-            if (this.name) {
-
-                //this.$store.commit('changeName', this.name)
-
-                //localStorage.username = this.name
-
-                //this.$store.state.userName = this.name
-
-                this.$router.push({
-                    name: 'home',
-                    params: {userName: this.name} 
-                })
-                
-            } else {
-                this.errorText = "Please enter a name first!"
+        submitHandler() {
+            const singinData = {
+                email: this.email, 
+                password: this.pass,
             }
+            try {
+                this.$store.dispatch('login', singinData )
+                this.$router.push('/')
+            } catch (e) {
+                console.log(e)
+            }
+            
         },
     }
 }

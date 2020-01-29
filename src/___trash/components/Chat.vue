@@ -4,12 +4,12 @@
             <div class="card-header bg-dark px-3 py-2">
                 <div class="row align-items-center">
                 <div class="col"><span class="h2 font-weight-light text-secondary">Chat </span></div>
-                <div class="col-auto text-muted"><b> 32 </b> / 50  </div>
+                <div class="col-auto text-muted"><b> {{ messageCount }} </b> / 50  </div>
                 </div>
             </div>
-            <div class="card-body p-3" style="max-height: 60vh; overflow: auto;" v-chat-scroll="{always: true, smooth: true}">
+            <div class="card-body p-3" style="max-height: 30vh; overflow: auto;" v-chat-scroll="{always: true, smooth: true}">
                 <div v-for="cm in allMessages" :key="cm.timeStamp" class="list-group list-group-flush">
-                    <div v-if="cm.forUser === '' && cm.userName === $route.params.userName" class="list-group-item">
+                    <div v-if="cm.forUser === '' && cm.userName === $store.state.auth.emailAuthUser" class="list-group-item">
                         <div class="row align-items-center">
                             <div class="col-2 text-center">
                                 <img src="https://coderthemes.com/hyper/creative/assets/images/users/avatar-1.jpg" height="48" class="rounded-circle border border-success" alt="Shreyu N">
@@ -21,7 +21,7 @@
                             </div>
                         </div>
                     </div>
-                    <div v-else-if="cm.forUser != '' && cm.userName === $route.params.userName" class="list-group-item">
+                    <div v-else-if="cm.forUser != '' && cm.userName === $store.state.auth.emailAuthUser" class="list-group-item">
                         <div class="row align-items-center">
                             <div class="col-2 text-center">
                                 <img src="https://coderthemes.com/hyper/creative/assets/images/users/avatar-1.jpg" height="48" class="rounded-circle border border-success" alt="Shreyu N">
@@ -35,7 +35,7 @@
                             </div>
                         </div>
                     </div>
-                    <div v-else-if="cm.forUser === '' && cm.userName != $route.params.userName" class="list-group-item">
+                    <div v-else-if="cm.forUser === '' && cm.userName != $store.state.auth.emailAuthUser" class="list-group-item">
                         <div class="row align-items-center">
                             <div class="col-2 text-center">
                                 <img src="https://coderthemes.com/hyper/creative/assets/images/users/avatar-3.jpg" height="48" class="rounded-circle" alt="Shreyu N">
@@ -47,7 +47,7 @@
                             </div>
                         </div>
                     </div>
-                    <div v-else-if="cm.forUser === $route.params.userName && cm.userName != $route.params.userName" class="list-group-item bg-light">
+                    <div v-else-if="cm.forUser === $store.state.auth.emailAuthUser && cm.userName != $store.state.auth.emailAuthUser" class="list-group-item bg-light">
                         <div class="row align-items-center">
                             <div class="col-2 text-center">
                                 <img src="https://coderthemes.com/hyper/creative/assets/images/users/avatar-2.jpg" height="48" class="rounded-circle" alt="Shreyu N">
@@ -68,20 +68,15 @@
 <script>
 
 import { mapGetters, mapActions } from 'vuex'
-//import VueChatScroll from 'vue-chat-scroll'
 
 export default {
     name: 'Chat',
     data() {
         return {
-            userName: this.$route.params.userName,
+            allMessages: [],
+            messageCount: 0,
         }
     },
-    computed: mapGetters(["allMessages"]),
-    methods: mapActions(["fetchMessages"]),
-    async mounted() {
-        this.fetchMessages()
-        
-    }
+    
 }
 </script>

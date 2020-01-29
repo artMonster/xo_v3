@@ -1,59 +1,22 @@
 <template>
-  <section class="home">
-    <HeaderXo />
-    <main class="container-fluid mt-4">
-      <div class="row justify-content-center">
-        <div class="col-md-10 col-xl-4 pb-4">
-          <div class="card">
-            <div class="card-header bg-dark px-3 py-2">
-              <div class="row align-items-center">
-                <div class="col"><span class="h2 font-weight-light text-secondary">Room List</span></div>
-                <div class="col-auto px-3"><RoomForm /></div>
-              </div>
-            </div>
-          </div>
-          <RoomList />
-        </div>
-        <div class="col-md-10 col-lg-4 col-xl-3 pb-4">
-          <UserList />
-        </div>
-        <div class="col-md-10 col-lg-6 col-xl-5">
-          <Chat />
-          <div class="card">
-            <div class="card-header bg-dark px-3 py-3">
-              <div class="px-3"><ChatForm  /></div>
-            </div>
-          </div>
-          
-        </div>
-      </div>
-    </main>
-  </section>
+  <div class="home">
+    <b-container class="bv-example-row">
+      <b-row class="justify-content-md-center">
+        <b-col cols="lg-6" class="mb-5">
+          <room-section></room-section>
+        </b-col>
+      </b-row>
+    </b-container>
+  </div>
 </template>
 
 <script>
-// @ is an alias to /src
-import HeaderXo from '@/components/HeaderXo.vue'
-
-import RoomList from '@/components/RoomList.vue'
-import RoomForm from '@/components/RoomForm.vue'
-
-import Chat from '@/components/Chat.vue'
-import ChatForm from '@/components/ChatForm.vue'
-
-import UserList from '@/components/UserList.vue'
-
-//import db from '@/firebase/init'
-//import moment from 'moment'
-
+import RoomSection from '@/components/RoomSection.vue'
 
 export default {
   name: 'home',
-  props: {
-    userName: String
-  },
   components: {
-    HeaderXo, RoomList, RoomForm, UserList, Chat, ChatForm
+    RoomSection
   },
 }
 </script>

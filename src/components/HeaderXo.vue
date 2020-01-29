@@ -8,30 +8,41 @@
                 <a class="nav-link" :href="href" @click="navigate">Lobby</a>
               </li>
             </router-link>
-            <router-link to="/room" v-slot="{ href, route, navigate, isActive, isExactActive }">
+            <router-link to="/game" v-slot="{ href, route, navigate, isActive, isExactActive }">
               <li :class="[isActive && 'nav-item router-link-active', isExactActive && 'nav-item router-link-exact-active']">
-                <a class="nav-link" :href="href" @click="navigate">Room</a>
-              </li>
-            </router-link>
-            <router-link to="/about" v-slot="{ href, route, navigate, isActive, isExactActive }">
-              <li :class="[isActive && 'nav-item router-link-active', isExactActive && 'nav-item router-link-exact-active']">
-                <a class="nav-link" :href="href" @click="navigate">About</a>
+                <a class="nav-link" :href="href" @click="navigate">Game</a>
               </li>
             </router-link>
           </ul>
         </div>
         <ul class="navbar-nav mx-auto">
            <li class="nav-item">
-            <a class="nav-link text-white"><strong>{{ userName }}</strong></a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" >
-              <img :src="userPic" height="24" class="rounded-circle" :alt="userName">
+            <a class="nav-link">
+              <span class="text-info">
+                <b-icon icon="person-fill" aria-hidden="true"></b-icon>
+              </span>
+              <span class="text-info">
+{{ authInfo.email }}
+              </span>
+            </a>
+           </li>
+            <li class="nav-item">
+            <a class="nav-link">
+              <span class="text-success">
+                <b-icon icon="flag-fill" aria-hidden="true"></b-icon>
+              </span>
+              <span class="text-success">
+               
+              </span>
             </a>
           </li>
-          <router-link to="/singout" v-slot="{ href, route, navigate, isActive, isExactActive }">
-              <li :class="[isActive && 'nav-item router-link-active', isExactActive && 'nav-item router-link-exact-active']" >
-                <a class="nav-link" :href="href" @click="navigate">SingOut</a>
+          <router-link to="/singout" v-slot="{ href, navigate, isActive, isExactActive }">
+              <li class="nav-item" >
+                <a class="nav-link" :href="href" @click="navigate">
+                  <span>
+                    <b-icon icon="box-arrow-right" aria-hidden="true"></b-icon>
+                  </span>
+                  </a>
               </li>
             </router-link>
           </ul>
@@ -41,14 +52,11 @@
 
 
 <script>
+
+import { mapGetters, mapActions } from 'vuex'
+
 export default {
   name: 'HeaderXo',
-  data() {
-    return {
-      userName: this.$route.params.userName,
-      userPic: 'https://coderthemes.com/hyper/creative/assets/images/users/avatar-2.jpg'
-    }
-  }
+  computed: mapGetters(['authInfo']),
 }
-
 </script>
