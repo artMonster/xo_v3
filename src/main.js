@@ -17,7 +17,6 @@ Vue.use(VueChatScroll)
 Vue.config.debug = true
 
 let app
-
 auth.onAuthStateChanged((user) => {
     if (!app) {
         app = new Vue({

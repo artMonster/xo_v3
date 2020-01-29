@@ -22,7 +22,7 @@
                 <b-icon icon="person-fill" aria-hidden="true"></b-icon>
               </span>
               <span class="text-info">
-{{ authInfo.email }}
+                {{ getAuth.email }}
               </span>
             </a>
            </li>
@@ -57,6 +57,13 @@ import { mapGetters, mapActions } from 'vuex'
 
 export default {
   name: 'HeaderXo',
-  computed: mapGetters(['authInfo']),
+  computed: mapGetters(['getAuth']),
+  methods: mapActions(["getUid"]),
+  async mounted() {
+    const auth = await this.getAuth
+    if (!(auth && auth.id)) {
+      await this.getUid()
+    }
+  }
 }
 </script>

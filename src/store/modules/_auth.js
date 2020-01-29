@@ -4,7 +4,7 @@ import { auth, database } from '@/firebase/init'
 
 export default {
     actions: {
-        login({ dispatch, commit }, { email, password }) {
+        login({ commit }, { email, password }) {
             try {
                 auth.signInWithEmailAndPassword(email, password).then((resp) => {
                     const responce = {
@@ -12,7 +12,7 @@ export default {
                         email: resp.user.email,
                         room: 'lobby'
                     }
-                    commit('setInfo', responce)
+                    commit('setAuth', responce)
                 })
 
             } catch (e) {
@@ -29,13 +29,33 @@ export default {
                 throw e
             }
         },
-        getUid() {
-            const user = auth.currentUser
-            return user ? user.uid : null
+        async getUid(ctx) {
+            var result = null
+
+            try {
+                const user = await auth.currentUser
+
+                if (user) {
+                    const responce = {
+                        id: user.uid,
+                        email: user.email,
+                        room: 'lobby',
+                        game: null
+                    }
+
+                    ctx.commit('setAuth', responce)
+                    return responce
+                }
+
+            } catch (e) {
+                commit('setError', e)
+                throw e
+            }
+
         },
     },
     mutations: {
-        setInfo(state, info) {
+        setAuth(state, info) {
             state.authInfo = info
         },
         clearInfo(state) {
@@ -52,7 +72,7 @@ export default {
         authInfo: []
     },
     getters: {
-        authInfo(state) {
+        getAuth(state) {
             return state.authInfo
         }
     }

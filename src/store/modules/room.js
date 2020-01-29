@@ -3,23 +3,38 @@ import * as api from "@/firebase/init"
 
 export default {
     actions: {
-        async fetchRooms(ctx) {
+        async fetchRooms(com) {
             try {
                 await api.getAllRooms(rooms => {
-                    ctx.commit("setRooms", rooms)
+                    com.commit("setRooms", rooms)
                 })
             } catch (e) {
-                console.log(e)
+                com.commit('setError', e)
+                throw e
             }
-        }
+        },
+        async createRoom({ commit, dispatch }, room) {
+            try {
+                const user = await dispatch('getUid')
+                const roomObj = {
+                    title: room.title,
+                    lock: room.lock,
+                    author: user.id,
+                    timestamp: Date.now()
+                }
+                await api.addRoom(roomObj, rooms => {
+                    return { rooms }
+                })
+            } catch (e) {
+                commit('setError', e)
+                throw e
+            }
+        },
     },
     mutations: {
         setRooms(state, rooms) {
             state.rooms = rooms
-        },
-        createRoom(state, newRoom) {
-            state.rooms.unshift(newRoom)
-        },
+        }
     },
     state: {
         rooms: [],

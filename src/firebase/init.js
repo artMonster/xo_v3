@@ -42,16 +42,6 @@ export function getUsers(cont) {
     })
 }
 
-export function getGameData(gd, cont) {
-    console.log(gd)
-    var result = []
-        //database.ref("rooms/" + gd + "/games").on("value", function(snapshot) {
-        //result = Object.keys(snapshot.val()).map(key => ({...snapshot.val()[key], id: key }))
-        //
-        //cont(result)
-        //  })
-}
-
 export function updateUser(upd, cont) {
     var s = []
     s[upd.obj.key] = upd.obj.val
@@ -100,16 +90,8 @@ export function addGame(g, cont) {
     }, 10)
 }
 
-export function addRoom(room, cont) {
-    const roomObj = {
-        title: room.title,
-        lock: room.lock,
-        author: room.authorUid,
-        id: room.id,
-        timestamp: Date.now()
-    }
-    const result = database.ref(`/users/`).push(roomObj)
-
+export function addRoom(roomObj, cont) {
+    const result = database.ref(`/rooms/`).push(roomObj)
     setTimeout(function() {
         cont(result)
     }, 10)

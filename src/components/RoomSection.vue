@@ -30,18 +30,12 @@ import RoomForm from "./RoomForm.vue"
 
 export default {
   name: "RoomSection",
-  
   computed: mapGetters(["rooms", "roomsCount"]),
   methods: {
     ...mapActions(["fetchRooms", "setUser"]),
     async selectRoom(room) {
       try {
-        await this.$router.push({
-                    name: 'game',
-                    params: {
-                        roomId: room,
-                    }
-                })
+        await this.$router.push({ name: 'game', params: { roomId: room, }}) 
       } catch (e) {
         console.log(e)
       }

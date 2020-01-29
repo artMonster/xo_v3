@@ -31,18 +31,19 @@
 </template>
 
 <script>
-import { mapMutations } from "vuex"
+import { mapActions } from "vuex"
 export default {
   name: "RoomForm",
   data() {
     return {
       title: "",
+      lock: false,
       st: null,
       submittedNames: [],
     }
   },
   methods: {
-    ...mapMutations(["createRoom"]),
+    ...mapActions(["createRoom"]),
     checkFormValidity() {
       let valid = this.$refs.form.checkValidity()
       this.st = valid && this.title.length > 3 && this.title.length < 16
@@ -58,7 +59,8 @@ export default {
                 return
             }
       this.createRoom({
-        title: this.title
+        title: this.title,
+        lock: this.lock
       })
       this.$nextTick(() => {
         this.$bvModal.hide("modal-prevent-closing")

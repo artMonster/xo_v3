@@ -14,7 +14,6 @@ export default {
     layout() {
       return (this.$route.meta.layout || 'empty') + '-layout'
     },
-    
   },
   components: {
     EmptyLayout, MainLayout
@@ -82,7 +81,6 @@ svg {
   margin-bottom: 0;
   border: none;
 }
-
 .custom-control-input:disabled~.custom-control-label::before,
 .custom-control-input[disabled]~.custom-control-label::before {
   background-color: #28a745;
