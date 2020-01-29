@@ -73,7 +73,6 @@ export function addGame(g, cont) {
         timestamp: Date.now()
     }
 
-    console.log(gObj)
     const result = database.ref(`/rooms/${g.room}/games/`).push(gObj)
 
     setTimeout(function() {

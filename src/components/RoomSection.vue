@@ -1,5 +1,6 @@
 <template>
   <section class="userSection">
+  
     <div class="card">
       <div class="card-header bg-info p-0">
         <span class="px-3 text-white small"><b> {{ roomsCount }} </b></span>
@@ -7,6 +8,7 @@
       <div class="card-body p-0">
         <b-list-group>
           <room
+            v-if="roomsCount"
             v-for="(room, index) in rooms"
             :key="index"
             :room="room"
@@ -30,6 +32,9 @@ import RoomForm from "./RoomForm.vue"
 
 export default {
   name: "RoomSection",
+  data: () => ({
+    loading: true,
+  }),
   computed: mapGetters(["rooms", "roomsCount"]),
   methods: {
     ...mapActions(["fetchRooms", "setUser"]),
@@ -44,6 +49,9 @@ export default {
   components: { Room, RoomForm },
   async mounted() {
     await this.fetchRooms()
+    setTimeout(function() {
+      this.loading = false
+       }, 10)
   },
 }
 
