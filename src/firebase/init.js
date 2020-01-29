@@ -64,7 +64,7 @@ export function updateGame(upd, cont) {
     var s = []
     s[upd.obj.key] = upd.obj.val
     database.ref().child(`/rooms/${upd.ref}/`).update({...s }).then(result => {
-        cont(upd.obj.val)
+        cont(result)
     })
 }
 

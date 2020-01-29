@@ -39,12 +39,9 @@ export default {
                 api.getRoom(payload, game => {
                     ctx.commit('setRoom', game)
                     const gamesObj = Object.keys(game.games).map(key => ({...game.games[key], id: key }))
-                    const cells = gamesObj[0].steps[gamesObj[0].steps.length - 1]
-                    console.log(gamesObj[0].steps.length)
                     ctx.commit('setGame', gamesObj[0])
                     ctx.commit('setSteps', gamesObj[0].steps)
-                    ctx.commit('setCells', cells)
-
+                    ctx.commit('setStep', gamesObj[0].step)
                 })
             } catch (e) {
                 console.log(e)
@@ -72,6 +69,23 @@ export default {
             //     console.log(e)
             // }
         },
+        nextStep(ctx, payload) {
+            const updateObj = {
+                ref: payload.roomId + '/games/' + this.getters.gameInfo.id,
+                obj: {
+                    key: 'steps',
+                    val: this.getters.getSteps
+                }
+            }
+            try {
+                api.updateGame(updateObj, room => {
+                    console.log(room)
+                        //ctx.commit("switchRoom", room)
+                })
+            } catch (e) {
+                console.log(e)
+            }
+        }
         // fetchStep(ctx) {
         //     try {
         //         api.getSteps(step => {
@@ -88,6 +102,12 @@ export default {
         },
         setGame(state, game) {
             state.gameInfo = game
+        },
+        pushSteps(state, steps) {
+            state.steps.push(steps)
+        },
+        setStep(state, step) {
+            state.step = step
         },
         setSteps(state, steps) {
             state.steps = steps
@@ -110,6 +130,7 @@ export default {
         gameInfo: [],
         tagged: [],
         steps: [],
+        step: [],
         coin: [10, 10, 10, 10, 10, 10, 10, 10, 10],
         cells: [0, 0, 0, 0, 0, 0, 0, 0, 0],
         checked: false,
@@ -121,7 +142,10 @@ export default {
         gameInfo(state) {
             return state.gameInfo
         },
-        steps(state) {
+        getStep(state) {
+            return state.step
+        },
+        getSteps(state) {
             return state.steps
         },
         taggedCell(state) {
@@ -136,5 +160,8 @@ export default {
         checkedCoin(state) {
             return state.coin
         },
+        stepsCount(state) {
+            return state.steps.length
+        }
     }
 }
