@@ -18,6 +18,7 @@ export const db = firebase.firestore()
 export const auth = firebase.auth()
 export const database = firebase.database()
 
+
 export function getAllRooms(cont) {
     var result = []
     database.ref(`/rooms/`).on("value", function(snapshot) {
@@ -130,4 +131,12 @@ export function getGame(cont) {
         result = Object.keys(snapshot.val()).map(key => ({...snapshot.val()[key], id: key }))
         cont(result)
     })
+}
+
+
+export function addUser(roomObj, cont) {
+    const result = database.ref('/users/' + roomObj.id).set(roomObj)
+    setTimeout(function() {
+        cont(result)
+    }, 10)
 }

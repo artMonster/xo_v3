@@ -7,6 +7,14 @@ export default {
         async login({ commit, dispatch }, { email, password }) {
             try {
                 const sing = await api.auth.signInWithEmailAndPassword(email, password).then(r => {
+                    const userObj = {
+                        id: r.user.uid,
+                        email: r.user.email,
+                        name: 'name',
+                        roomId: 'Lobby',
+                        timestamp: Date.now()
+                    }
+                    api.addUser(userObj, r => {})
                     api.getUser(r.user.uid, r => {
                         commit('setAuth', r)
                     })
