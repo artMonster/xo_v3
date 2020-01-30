@@ -24,24 +24,44 @@ const linesCell = [
 
 export default {
     actions: {
-        createGame(ctx, payload) {
+        async createGame({ commit }, payload) {
             try {
-                api.addGame(payload, game => {
-                    ctx.commit('setGame', game.data)
-                    ctx.commit('setSteps', game.steps)
+                const gameObj = {
+                    game: {
+                        option: payload.option,
+                        board: [],
+                        timestamp: Date.now(),
+                    },
+                    roomId: payload.roomId,
+                }
+                await api.addGame(gameObj, r => {
+                    return { r }
                 })
             } catch (e) {
-                console.log(e)
+                commit('setError', e)
+                throw e
             }
         },
-        fetchRoom(ctx, payload) {
+        // createGame(ctx, payload) {
+        //     try {
+        //         api.addGame(payload, game => {
+        //             ctx.commit('setGame', game.data)
+        //             ctx.commit('setSteps', game.steps)
+        //         })
+        //     } catch (e) {
+        //         console.log(e)
+        //     }
+        // },
+        async fetchRoom(ctx, payload) {
             try {
-                api.getRoom(payload, game => {
-                    ctx.commit('setRoom', game)
-                    const gamesObj = Object.keys(game.games).map(key => ({...game.games[key], id: key }))
-                    ctx.commit('setGame', gamesObj[0])
-                    ctx.commit('setSteps', gamesObj[0].steps)
-                    ctx.commit('setStep', gamesObj[0].step)
+                await api.getRoom(payload, room => {
+                    ctx.commit('setRoom', room)
+                        //const gamesObj = Object.keys(game.games).map(key => ({...game.games[key], id: key }))
+                    const incomingUserObj = Object.keys(room.incoming).map(key => ({...room.incoming[key], id: key }))
+                    ctx.commit('setIncomming', incomingUserObj)
+                        //ctx.commit('setGame', gamesObj[0])
+                        //ctx.commit('setSteps', gamesObj[0].steps)
+                        //ctx.commit('setStep', gamesObj[0].step)
                 })
             } catch (e) {
                 console.log(e)
@@ -97,6 +117,9 @@ export default {
         // },
     },
     mutations: {
+        setIncomming(state, users) {
+            state.incomming = users
+        },
         setRoom(state, room) {
             state.room = room
         },
@@ -126,6 +149,7 @@ export default {
         },
     },
     state: {
+        incomming: [],
         room: [],
         gameInfo: [],
         tagged: [],
@@ -138,6 +162,9 @@ export default {
     getters: {
         room(state) {
             return state.room
+        },
+        getIncomming(state) {
+            return state.incomming
         },
         gameInfo(state) {
             return state.gameInfo

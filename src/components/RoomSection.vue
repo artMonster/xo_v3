@@ -12,6 +12,7 @@
             v-for="(room, index) in rooms"
             :key="index"
             :room="room"
+            :active="room.lock"
             @select-room="selectRoom">
           </room>
         </b-list-group>
@@ -35,11 +36,12 @@ export default {
   data: () => ({
     loading: true,
   }),
-  computed: mapGetters(["rooms", "roomsCount"]),
+  computed: mapGetters(["rooms", "roomsCount", "getAuth"]),
   methods: {
-    ...mapActions(["fetchRooms", "setUser"]),
+    ...mapActions(["fetchRooms", "pushIncomming", 'getUid']),
     async selectRoom(room) {
       try {
+        await this.pushIncomming(room)
         await this.$router.push({ name: 'game', params: { roomId: room, }}) 
       } catch (e) {
         console.log(e)
@@ -48,10 +50,11 @@ export default {
   },
   components: { Room, RoomForm },
   async mounted() {
+    const au = await this.getAuth
+    const inc = this.pushIncomming('Lobby')
     await this.fetchRooms()
-    setTimeout(function() {
-      this.loading = false
-       }, 10)
+    this.loading = false
+    
   },
 }
 

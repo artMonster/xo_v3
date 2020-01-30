@@ -8,11 +8,6 @@
                 <a class="nav-link" :href="href" @click="navigate">Lobby</a>
               </li>
             </router-link>
-            <router-link to="/game" v-slot="{ href, route, navigate, isActive, isExactActive }">
-              <li :class="[isActive && 'nav-item router-link-active', isExactActive && 'nav-item router-link-exact-active']">
-                <a class="nav-link" :href="href" @click="navigate">Game</a>
-              </li>
-            </router-link>
           </ul>
         </div>
         <ul class="navbar-nav mx-auto">
@@ -22,7 +17,7 @@
                 <b-icon icon="person-fill" aria-hidden="true"></b-icon>
               </span>
               <span class="text-info">
-                {{ getAuth.email }}
+               
               </span>
             </a>
            </li>
@@ -58,12 +53,5 @@ import { mapGetters, mapActions } from 'vuex'
 export default {
   name: 'HeaderXo',
   computed: mapGetters(['getAuth']),
-  methods: mapActions(["getUid"]),
-  async mounted() {
-    const auth = await this.getAuth
-    if (!(auth && auth.id)) {
-      await this.getUid()
-    }
-  }
 }
 </script>

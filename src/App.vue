@@ -41,11 +41,13 @@ export default {
   background-color: transparent;
   border: none !important;
 }
+.card-footer {
+  border: none !important;
+}
 .card,
 .list-group-item {
   border: none !important;
-}
-.list-group-item {
+  border-bottom: 2px solid #fff !important;
   cursor: pointer;
 }
 .text-wrap {

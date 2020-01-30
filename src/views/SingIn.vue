@@ -26,18 +26,20 @@
 export default {
     name: 'singin',
     data: () => ({
-        email: 'test@test.com',
-        pass: '123456',
+        email: 'orishka81@gmail.com',
+        pass: '222222',
     }),
     methods: {
-        submitHandler() {
+        async submitHandler() {
             const singinData = {
                 email: this.email, 
                 password: this.pass,
             }
             try {
-                this.$store.dispatch('login', singinData )
-                this.$router.push('/')
+                const sing = await this.$store.dispatch('login', singinData ).then(() => {
+                    this.$router.push('/')
+                })
+                
             } catch (e) {
                 console.log(e)
             }

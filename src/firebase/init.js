@@ -31,7 +31,12 @@ export function getRoom(rId, cont) {
     database.ref(`/rooms/${rId}`).on("value", function(snapshot) {
         cont(snapshot.val())
     })
+}
 
+export function getUser(userId, cont) {
+    database.ref(`/users/${userId}`).on("value", function(snapshot) {
+        cont(snapshot.val())
+    })
 }
 
 export function getUsers(cont) {
@@ -58,7 +63,7 @@ export function updateGame(upd, cont) {
     })
 }
 
-export function addGame(g, cont) {
+export function _addGame(g, cont) {
     const gObj = {
         steps: [],
         stride: 'o',
@@ -94,4 +99,35 @@ export function addRoom(roomObj, cont) {
     setTimeout(function() {
         cont(result)
     }, 10)
+}
+export function addGame(obj, cont) {
+    var newGameKey = database.ref().child('games').push().key
+    var upd = {}
+    upd['/games/' + newGameKey] = obj.game
+    upd['/rooms/' + obj.roomId + '/games/'] = newGameKey
+    const result = database.ref().update(upd);
+    setTimeout(function() {
+        cont(result)
+    }, 10)
+}
+export function updateRoom(obj, cont) {
+    var upd = {}
+    if (obj.user.id) {
+        upd['/users/' + obj.user.id + '/roomId/'] = obj.roomId
+        if (obj.roomId != 'Lobby') {
+            upd['/rooms/' + obj.roomId + '/incoming/' + obj.user.id] = obj.user
+        }
+        const result = database.ref().update(upd);
+        setTimeout(function() {
+            cont(result)
+        }, 10)
+    }
+}
+
+export function getGame(cont) {
+    var result = []
+    database.ref(`/rooms/`).on("value", function(snapshot) {
+        result = Object.keys(snapshot.val()).map(key => ({...snapshot.val()[key], id: key }))
+        cont(result)
+    })
 }

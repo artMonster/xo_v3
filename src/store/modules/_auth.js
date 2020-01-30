@@ -1,20 +1,16 @@
-import { auth, database } from '@/firebase/init'
+import * as api from "@/firebase/init"
 
 
 
 export default {
     actions: {
-        login({ commit }, { email, password }) {
+        async login({ commit, dispatch }, { email, password }) {
             try {
-                auth.signInWithEmailAndPassword(email, password).then((resp) => {
-                    const responce = {
-                        id: resp.user.uid,
-                        email: resp.user.email,
-                        room: 'lobby'
-                    }
-                    commit('setAuth', responce)
+                const sing = await api.auth.signInWithEmailAndPassword(email, password).then(r => {
+                    api.getUser(r.user.uid, r => {
+                        commit('setAuth', r)
+                    })
                 })
-
             } catch (e) {
                 commit('setError', e)
                 throw e
@@ -22,7 +18,7 @@ export default {
         },
         logout({ commit }) {
             try {
-                auth.signOut()
+                api.auth.signOut()
                 commit('clearInfo')
             } catch (e) {
                 commit('setError', e)
@@ -30,28 +26,13 @@ export default {
             }
         },
         async getUid(ctx) {
-            var result = null
-
-            try {
-                const user = await auth.currentUser
-
-                if (user) {
-                    const responce = {
-                        id: user.uid,
-                        email: user.email,
-                        room: 'lobby',
-                        game: null
-                    }
-
-                    ctx.commit('setAuth', responce)
-                    return responce
-                }
-
-            } catch (e) {
-                commit('setError', e)
-                throw e
-            }
-
+            const user = await api.auth.currentUser
+            return new Promise((resolve, reject) => {
+                api.getUser(user.uid, r => {
+                    ctx.commit('setAuth', r)
+                    resolve(r)
+                })
+            })
         },
     },
     mutations: {

@@ -20,7 +20,7 @@ Vue.component('Loader', Loader)
 Vue.config.debug = true
 
 let app
-auth.onAuthStateChanged((user) => {
+auth.onAuthStateChanged(() => {
     if (!app) {
         app = new Vue({
             router,

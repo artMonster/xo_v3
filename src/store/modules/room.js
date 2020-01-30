@@ -5,8 +5,8 @@ export default {
     actions: {
         async fetchRooms(com) {
             try {
-                await api.getAllRooms(rooms => {
-                    com.commit("setRooms", rooms)
+                await api.getAllRooms(r => {
+                    com.commit("setRooms", r)
                 })
             } catch (e) {
                 com.commit('setError', e)
@@ -22,8 +22,27 @@ export default {
                     author: user.id,
                     timestamp: Date.now()
                 }
-                await api.addRoom(roomObj, rooms => {
-                    return { rooms }
+                await api.addRoom(roomObj, r => {
+                    return { r }
+                })
+            } catch (e) {
+                commit('setError', e)
+                throw e
+            }
+        },
+        async pushIncomming({ commit, dispatch }, roomId) {
+            try {
+                const user = await dispatch('getUid')
+                const incommingObj = {
+                    user: {
+                        id: user.id,
+                        email: user.email,
+                        timestamp: Date.now()
+                    },
+                    roomId: roomId,
+                }
+                const ur = await api.updateRoom(incommingObj, r => {
+                    return { r }
                 })
             } catch (e) {
                 commit('setError', e)
