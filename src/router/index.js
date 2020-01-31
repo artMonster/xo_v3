@@ -11,15 +11,23 @@ const routes = [{
             import ('@/views/Home.vue')
     },
     {
-        path: '/game',
-        name: 'game',
+        path: '/room/:roomId',
+        name: 'room',
         meta: { layout: 'main' },
+        props: true,
+        beforeEnter: (to, from, next) => {
+            if (to.params.roomId) {
+                next();
+            } else {
+                next({ name: 'Login' })
+            }
+        },
         component: () =>
             import ('@/views/Game.vue')
     },
     {
-        path: '/room',
-        name: 'room',
+        path: '/game',
+        name: 'game',
         meta: { layout: 'main' },
         props: true,
         component: () =>

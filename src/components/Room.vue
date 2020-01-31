@@ -16,11 +16,16 @@
 </template>
 
 <script>
+import moment from 'moment'
 export default {
   name: 'Room',
+  components: { moment },
   props: {
     room: Object,
     active: Boolean,
-  }
+  },
+  mounted() {
+      this.room.timestamp = moment(this.room.timestamp).locale('uk').format('LL')
+  },
 }
 </script>

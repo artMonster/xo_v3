@@ -79,7 +79,7 @@ svg {
 .custom-control-label::before,
 .custom-control-label::after {
   left: calc(50% - 1.5rem);
-  top: 20px;
+  top: 40px;
   margin-bottom: 0;
   border: none;
 }

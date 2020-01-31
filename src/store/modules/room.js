@@ -30,16 +30,19 @@ export default {
                 throw e
             }
         },
-        async pushIncomming({ commit, dispatch }, roomId) {
+        async pushIncomming({ commit, dispatch }, { room, side = null }) {
+
             try {
                 const user = await dispatch('getUid')
                 const incommingObj = {
                     user: {
                         id: user.id,
                         email: user.email,
+                        side: side,
                         timestamp: Date.now()
                     },
-                    roomId: roomId,
+                    roomId: room,
+
                 }
                 const ur = await api.updateRoom(incommingObj, r => {
                     return { r }

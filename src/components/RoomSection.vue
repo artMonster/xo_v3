@@ -41,8 +41,8 @@ export default {
     ...mapActions(["fetchRooms", "pushIncomming", 'getUid']),
     async selectRoom(room) {
       try {
-        await this.pushIncomming(room)
-        await this.$router.push({ name: 'game', params: { roomId: room, }}) 
+        await this.pushIncomming({room})
+        await this.$router.push({ name: 'room', params: { roomId: room } }) 
       } catch (e) {
         console.log(e)
       }
@@ -51,7 +51,8 @@ export default {
   components: { Room, RoomForm },
   async mounted() {
     const au = await this.getAuth
-    const inc = this.pushIncomming('Lobby')
+    var room = 'Lobby'
+    const inc = this.pushIncomming({room})
     await this.fetchRooms()
     this.loading = false
     

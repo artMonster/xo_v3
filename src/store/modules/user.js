@@ -51,6 +51,9 @@ export default {
         users(state) {
             return state.users
         },
+        checkedUser(state) {
+            return state._cuid
+        },
         usersCount(state) {
             return state.users.length
         }

@@ -1,7 +1,7 @@
 <template>
-<div class="d-inline-block p-4">
-<b-button  variant="primary" class="btn btn-sm" @click="newGameHandler"> New Game </b-button>
-</div>
+    <div class="d-inline-block p-4">
+        <b-button  variant="primary" class="btn btn-lg" @click="newGameHandler"> [ START GAME ] </b-button>
+    </div>
 </template>
 
 <script>

@@ -20,6 +20,9 @@ export default {
     user: Object,
     active: Boolean,
     me: String,
-  }
+  },
+  mounted() {
+      this.user.timestamp = moment(this.room.timestamp).locale('uk').format('LL')
+  },
 }
 </script>
