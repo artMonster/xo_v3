@@ -6,7 +6,6 @@ import App from './App.vue'
 import router from './router'
 import store from './store'
 import { auth } from '@/firebase/init'
-import moment from 'moment'
 
 import Loader from '@/components/app/loader'
 
@@ -17,7 +16,6 @@ Vue.use(IconsPlugin)
 Vue.use(VueResource)
 Vue.use(VueChatScroll)
 Vue.component('Loader', Loader)
-Vue.component('moment', moment)
 
 
 Vue.config.debug = true

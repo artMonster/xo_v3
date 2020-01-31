@@ -35,15 +35,16 @@ export default {
             try {
                 const user = await dispatch('getUid')
                 const incommingObj = {
-                    user: {
-                        id: user.id,
-                        email: user.email,
-                        side: side,
-                        timestamp: Date.now()
-                    },
-                    roomId: room,
+                        user: {
+                            id: user.id,
+                            email: user.email,
+                            side: side,
+                            timestamp: Date.now()
+                        },
+                        roomId: room,
 
-                }
+                    }
+                    //console.log(incommingObj)
                 const ur = await api.updateRoom(incommingObj, r => {
                     return { r }
                 })
