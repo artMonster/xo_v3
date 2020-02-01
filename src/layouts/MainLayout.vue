@@ -1,7 +1,7 @@
 <template>
-  <div class="app-content" :class="{full: !isOpen}">    
+  <div class="app-content" :class="{full: !isOpen}">
     <header-xo></header-xo>
-    <main class="app-page py-3">
+    <main class="app-page">
       <router-view />
     </main>
   </div>
@@ -11,12 +11,12 @@
 import HeaderXo from '@/components/HeaderXo.vue'
 
 export default {
-  name: 'main-layout',
-  data: () => ({
-    isOpen: true,
-  }),
-  components: {
-    HeaderXo
-  }
+name: 'main-layout',
+data: () => ({
+isOpen: true,
+}),
+components: {
+HeaderXo
+}
 }
 </script>

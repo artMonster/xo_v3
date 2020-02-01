@@ -42,6 +42,9 @@ export default {
         },
         switchUser(state, user) {
             state._cuid = user
+        },
+        SetIncommingUser(state, users) {
+            state.incomming = users
         }
     },
     state: {

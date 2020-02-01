@@ -23,7 +23,10 @@ export default {
 <style>
 
 @import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
-
+.container,
+.container-fluid {
+  padding: 0
+}
 .table th, .table td, .table thead th {
     vertical-align: middle;
 }
@@ -67,6 +70,9 @@ svg {
 .custom-control-label {
   width: 3rem;
   height: 3rem;
+}
+.card-header:first-child {
+  border-radius: unset
 }
 .custom-control {
   padding: 0;

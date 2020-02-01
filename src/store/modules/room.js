@@ -3,13 +3,24 @@ import * as api from "@/firebase/init"
 
 export default {
     actions: {
-        async fetchRooms(com) {
+        async getRooms({ commit }) {
             try {
-                await api.getAllRooms(r => {
-                    com.commit("setRooms", r)
+                return new Promise((resolve) => {
+                    api.getAllRooms(resp => resolve(resp))
                 })
             } catch (e) {
-                com.commit('setError', e)
+                commit('setError', e)
+                throw e
+            }
+        },
+        async getRoomIncomming({ commit }, payload) {
+            try {
+                return new Promise((resolve) => {
+                    console.log(this)
+                    api.getIncomming(payload, resp => resolve(resp))
+                })
+            } catch (e) {
+                commit('setError', e)
                 throw e
             }
         },
@@ -22,31 +33,26 @@ export default {
                     author: user.id,
                     timestamp: Date.now()
                 }
-                await api.addRoom(roomObj, r => {
-                    return { r }
+                return new Promise((resolve) => {
+                    api.addRoom(roomObj, resp => resolve(resp))
                 })
             } catch (e) {
                 commit('setError', e)
                 throw e
             }
         },
-        async pushIncomming({ commit, dispatch }, { room, side = null }) {
-
+        async pushIncomming({ commit, dispatch }, { roomId, user, side = null }) {
+            // api.updateRoom()
+            user = { side: side, timestamp: Date.now() }
             try {
-                const user = await dispatch('getUid')
-                const incommingObj = {
-                        user: {
-                            id: user.id,
-                            email: user.email,
-                            side: side,
-                            timestamp: Date.now()
-                        },
-                        roomId: room,
+                const updateIncommingObj = {
+                    user,
+                    room: roomId,
 
-                    }
-                    //console.log(incommingObj)
-                const ur = await api.updateRoom(incommingObj, r => {
-                    return { r }
+                    timestamp: Date.now()
+                }
+                return new Promise((resolve) => {
+                    api.updateRoom(updateIncommingObj, resp => resolve(resp))
                 })
             } catch (e) {
                 commit('setError', e)
@@ -55,19 +61,17 @@ export default {
         },
     },
     mutations: {
-        setRooms(state, rooms) {
+        SetAllRooms(state, rooms) {
             state.rooms = rooms
-        }
+        },
+
     },
     state: {
         rooms: [],
     },
     getters: {
-        rooms(state) {
+        GetAllRooms(state) {
             return state.rooms
-        },
-        roomsCount(state) {
-            return state.rooms ? state.rooms.length : 0
         }
     }
 }

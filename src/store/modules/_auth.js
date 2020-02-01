@@ -57,7 +57,6 @@ export default {
         async getUid() {
             try {
                 const user = await api.auth.currentUser
-                console.log(user)
                 let result = {
                     _new: false,
                     id: user.uid,

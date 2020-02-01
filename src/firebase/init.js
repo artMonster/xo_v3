@@ -20,19 +20,18 @@ export const database = firebase.database()
 
 
 export function getAllRooms(cont) {
-    var result = []
     database.ref(`/rooms/`).on("value", function(snapshot) {
-        result = Object.keys(snapshot.val()).map(key => ({...snapshot.val()[key], id: key }))
+        const result = Object.keys(snapshot.val()).map(key => ({...snapshot.val()[key], id: key }))
         cont(result)
     })
 }
 
-export function getRoom(rId, cont) {
-    console.log(rId)
-    database.ref(`/rooms/${rId}`).on("value", function(snapshot) {
-        setTimeout(function() {
-            cont(snapshot.val())
-        }, 10)
+export function getIncomming(payload, commit) {
+    database.ref(`/rooms/${payload}/incoming/`).on("value", function(snapshot) {
+        console.log(snapshot.val())
+        console.log(payload)
+        const result = Object.keys(snapshot.val()).map(key => ({...snapshot.val()[key], id: key }))
+        commit(result ? result : '[]')
     })
 }
 
@@ -114,17 +113,13 @@ export function addGame(obj, cont) {
     }, 10)
 }
 export function updateRoom(obj, cont) {
-    var upd = {}
-    if (obj.user.id) {
-        upd['/users/' + obj.user.id + '/roomId/'] = obj.roomId
-        if (obj.roomId != 'Lobby') {
-            upd['/rooms/' + obj.roomId + '/incoming/' + obj.user.id] = obj.user
-        }
-        const result = database.ref().update(upd);
-        setTimeout(function() {
-            cont(result)
-        }, 10)
-    }
+    let upd = {}
+    upd['/users/' + obj.user.id + '/roomId/'] = obj.room
+    upd['/rooms/' + obj.room + '/incoming/' + obj.user.id] = obj.user
+    database.ref().update(upd).then(resp => {
+        cont(resp)
+    })
+
 }
 
 export function getGame(cont) {

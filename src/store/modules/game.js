@@ -52,21 +52,21 @@ export default {
         //         console.log(e)
         //     }
         // },
-        async fetchRoom(ctx, payload) {
-            try {
-                await api.getRoom(payload, room => {
-                    ctx.commit('setRoom', room)
-                        //const gamesObj = Object.keys(game.games).map(key => ({...game.games[key], id: key }))
-                    const incomingUserObj = Object.keys(room.incoming).map(key => ({...room.incoming[key], id: key }))
-                    ctx.commit('setIncomming', incomingUserObj)
-                        //ctx.commit('setGame', gamesObj[0])
-                        //ctx.commit('setSteps', gamesObj[0].steps)
-                        //ctx.commit('setStep', gamesObj[0].step)
-                })
-            } catch (e) {
-                console.log(e)
-            }
-        },
+        // async fetchRoom(ctx, payload) {
+        //     try {
+        //         await api.getRoom(payload, room => {
+        //             ctx.commit('setRoom', room)
+        //                 //const gamesObj = Object.keys(game.games).map(key => ({...game.games[key], id: key }))
+        //             const incomingUserObj = Object.keys(room.incoming).map(key => ({...room.incoming[key], id: key }))
+        //             ctx.commit('setIncomming', incomingUserObj)
+        //                 //ctx.commit('setGame', gamesObj[0])
+        //                 //ctx.commit('setSteps', gamesObj[0].steps)
+        //                 //ctx.commit('setStep', gamesObj[0].step)
+        //         })
+        //     } catch (e) {
+        //         console.log(e)
+        //     }
+        // },
         checkedStep({ commit }, step) {
             step.cells[step.s]
             var cellObj = [0, 0, 0, 0, 0, 0, 0, 0, 0]

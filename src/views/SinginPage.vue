@@ -23,7 +23,6 @@
 </template>
 
 <script>
-
 export default {
     name: 'SinginPage',
     data: () => ({
@@ -38,7 +37,6 @@ export default {
                 email: this.email, 
                 password: this.pass,
             }
-            
             const sing = await this.$store.dispatch('login', singinUserData ).then((resp) => {
                 let result = {
                     _new: resp.additionalUserInfo.isNewUser,
@@ -50,12 +48,12 @@ export default {
             })
             if (sing._new) {
                 // add user to DB
+                // ...
             } else {
                 // get user in DB
                 const res = await this.authUserLogin(sing.id)
-                this.$router.push({ name: 'home', params: { AuthUser: res }})
+                this.$router.push({ name: 'Home', params: { AuthUser: res }})
             }
-            
         },
         async authUserLogin(id) {
             const result = await this.$store.dispatch('getUserData', id ).then((resp) => {
@@ -66,15 +64,14 @@ export default {
         },
     },
     async mounted() {
-       
+        this.loading = true
         const result = await this.$store.dispatch('getUid')
         if (result) {
             const res = await this.authUserLogin(result.id)
-            this.$router.push({ name: 'home', params: { AuthUser: res }})
+            this.$router.push({ name: 'Home', params: { roomId: 'Lobby', AuthUser: res }})
         } else {
             this.loading = false
         }
-       
     },
 }
 </script>

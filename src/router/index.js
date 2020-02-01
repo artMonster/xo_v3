@@ -5,21 +5,29 @@ Vue.use(VueRouter)
 
 const routes = [{
         path: '/roomplace',
-        name: 'roomplace',
+        name: 'RoomsPlace',
         meta: { layout: 'main' },
+        props: true,
+        beforeEnter: (to, from, next) => {
+            if (to.params.AuthUser) {
+                next();
+            } else {
+                next({ name: 'SingIn' })
+            }
+        },
         component: () =>
-            import ('@/views/Rooms.vue')
+            import ('@/views/RoomsPage.vue')
     },
     {
         path: '/room/:roomId',
-        name: 'room',
+        name: 'Room',
         meta: { layout: 'main' },
         props: true,
         beforeEnter: (to, from, next) => {
             if (to.params.roomId) {
                 next();
             } else {
-                next({ name: 'singin' })
+                next({ name: 'RoomsPlace' })
             }
         },
         component: () =>
@@ -27,14 +35,14 @@ const routes = [{
     },
     {
         path: '/',
-        name: 'home',
+        name: 'Home',
         meta: { layout: 'main' },
         props: true,
         beforeEnter: (to, from, next) => {
             if (to.params.AuthUser) {
                 next();
             } else {
-                next({ name: 'singin' })
+                next({ name: 'SingIn' })
             }
         },
         component: () =>
@@ -42,21 +50,21 @@ const routes = [{
     },
     {
         path: '/singin',
-        name: 'singin',
+        name: 'SingIn',
         meta: { layout: 'empty' },
         component: () =>
             import ('@/views/SinginPage.vue')
     },
     {
         path: '/register',
-        name: 'register',
+        name: 'Register',
         meta: { layout: 'empty' },
         component: () =>
             import ('@/views/About.vue')
     },
     {
         path: '/singout',
-        name: 'singout',
+        name: 'SingOut',
         meta: { layout: 'empty' },
         component: () =>
             import ('@/views/SingOutPage.vue'),

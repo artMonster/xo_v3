@@ -35,13 +35,13 @@ export default {
   data: () => ({
     loading: true,
   }),
-  computed: mapGetters(["rooms", "roomsCount", "getAuthUser"]),
+  computed: mapGetters(["rooms", "roomsCount", "getAuth"]),
   methods: {
     ...mapActions(["fetchRooms", "pushIncomming", 'getUid']),
     async selectRoom(room) {
       try {
         await this.pushIncomming({room})
-        await this.$router.push({ name: 'room', params: { roomId: room , AuthUser: $route.params.AuthUser} }) 
+        await this.$router.push({ name: 'room', params: { roomId: room } }) 
       } catch (e) {
         console.log(e)
       }
@@ -49,7 +49,7 @@ export default {
   },
   components: { Room, RoomForm },
   async mounted() {
-    const au = await this.getAuth
+    const au = await this.getAuthUser
     var room = 'Lobby'
     const inc = this.pushIncomming({room})
     await this.fetchRooms()
