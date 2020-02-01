@@ -26,17 +26,17 @@ export default {
     actions: {
         async createGame({ commit }, payload) {
             try {
-                const gameObj = {
-                    game: {
-                        option: payload.option,
-                        board: [],
-                        timestamp: Date.now(),
-                    },
-                    roomId: payload.roomId,
-                }
-                await api.addGame(gameObj, r => {
-                    return { r }
-                })
+                // const gameObj = {
+                //     game: {
+                //         option: payload.option,
+                //         board: [],
+                //         timestamp: Date.now(),
+                //     },
+                //     roomId: payload.roomId,
+                // }
+                // await api.addGame(gameObj, r => {
+                //     return { r }
+                // })
             } catch (e) {
                 commit('setError', e)
                 throw e
@@ -98,10 +98,10 @@ export default {
                 }
             }
             try {
-                api.updateGame(updateObj, room => {
-                    console.log(room)
-                        //ctx.commit("switchRoom", room)
-                })
+                // api.updateGame(updateObj, room => {
+                //     console.log(room)
+                //         //ctx.commit("switchRoom", room)
+                // })
             } catch (e) {
                 console.log(e)
             }

@@ -19,9 +19,14 @@ export const auth = firebase.auth()
 export const database = firebase.database()
 
 
+/*
+
 export function getAllRooms(cont) {
+    var result = []
     database.ref(`/rooms/`).on("value", function(snapshot) {
-        const result = Object.keys(snapshot.val()).map(key => ({...snapshot.val()[key], id: key }))
+        if (snapshot && snapshot.val()) {
+            result = Object.keys(snapshot.val()).map(key => ({...snapshot.val()[key], id: key }))
+        }
         cont(result)
     })
 }
@@ -113,12 +118,8 @@ export function addGame(obj, cont) {
     }, 10)
 }
 export function updateRoom(obj, cont) {
-    let upd = {}
-    upd['/users/' + obj.user.id + '/roomId/'] = obj.room
-    upd['/rooms/' + obj.room + '/incoming/' + obj.user.id] = obj.user
-    database.ref().update(upd).then(resp => {
-        cont(resp)
-    })
+    console.log(obj)
+    
 
 }
 
@@ -137,3 +138,5 @@ export function addUser(roomObj, cont) {
         cont(result)
     }, 10)
 }
+
+*/

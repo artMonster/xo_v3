@@ -56,14 +56,19 @@ export default {
     },
     submitHandler() {
       if (!this.checkFormValidity()) {
-                return
-            }
-      this.createRoom({
+          return
+        }
+      const user = this.$store.getters.getAuthUser
+      
+      const result = this.$store.dispatch('createRoom', {
         title: this.title,
-        lock: this.lock
-      })
+        lock: this.lock,
+        author: user.id}).then(resp => { return resp })        
+      
+      
       this.$nextTick(() => {
         this.$bvModal.hide("modal-prevent-closing")
+        //this.$router.push({ name: 'Room', params: { roomId: roomId, AuthUser: user }}) 
       })
       this.title = ""
     },

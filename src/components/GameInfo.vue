@@ -4,30 +4,12 @@
     
       <div class="row no-gutters justify-content-center">
         
-        <div class="col-7">
-          <div class="card">
-            <div class="card-header bg-info p-0">
-              <span class="px-3 text-white small"><b> Incomming User : {{ incommingUser.length }} / 10</b></span>
-            </div>
-            <div class="card-body p-0">
-                <b-list-group>
-                      <user-incomming
-                        v-for="u in incommingUser"
-                        :key="u.timestamp"
-                        :userdata="u"
-                        :auth="getAuthUser"
-                        @switch-user="switchUser">
-                      </user-incomming>
-                </b-list-group>
-            </div>
-            <div class="card-footer text-center" v-if="incommingUser.length > 1"><game-form :roomId = "roomId"></game-form></div>
-          </div>
-        </div>
+       
         
-        <div class="col-5 bg-info">
+        <div class="col-md-5 bg-secondary">
           <p class="text-white pt-3 text-center small">RoomID : {{ roomId }} </p>
           <p class="text-white  text-center small"> {{ room.timestamp }} </p>
-          <div v-if="incommingUser.length > 1">
+          <div >
             <div class="row no-gutters justify-content-center align-items-end">
               <div class="col-6 text-center mt-3"><p class="small py-1">{{ selectSide === "o" ?  getAuthUser.email : '•' }} </p></div>
               <div class="col-6 text-center mt-3"><p class="small py-1"> {{ selectSide === "x" ? getAuthUser.email : '•' }} </p></div>
@@ -50,10 +32,29 @@
               
               <div class="col-12">
                 <div class="my-3 text-center pt-3">
-                   <b-button  v-if="incommingUser.length > 2" variant="warning" class="btn btn-lg" @click="newArenaHandler"> * GET ARENA * </b-button>
+                   <b-button variant="warning" class="btn btn-lg" @click="newArenaHandler"> * GET ARENA * </b-button>
                 </div>
               </div>
             </div>
+          </div>
+        </div>
+        <div class="col-md-7">
+          <div class="card">
+            <div class="card-header bg-info p-0">
+              <span class="px-3 text-white small"><b></b></span>
+            </div>
+            <div class="card-body p-0">
+                <b-list-group>
+                  <user-incomming
+                    v-for="u in incommingUser"
+                    :key="u.timestamp"
+                    :userdata="u"
+                    :auth="getAuthUser"
+                    @switch-user="switchUser">
+                  </user-incomming>
+                </b-list-group>
+            </div>
+            <div class="card-footer text-center"><game-form :roomId="roomId"></game-form></div>
           </div>
         </div>
       
@@ -91,9 +92,11 @@ export default {
   computed: mapGetters(["getAuthUser", "getIncomming"]),
   methods: {
     ...mapActions(["getRoomIncomming","pushIncomming", 'getUid', "switchUser"]),
-    ss(obj) {
-      const user = this.getAuthUser()
-      this.pushIncomming({roomId: this.roomId, userId: user.id, side: obj, })
+    async ss(obj) {
+      const user = await this.getAuthUser
+      //console.log(user)
+      this.incommingUser = await this.pushIncomming({roomId: this.roomId, userId: user.id }).then( resp => { return resp })
+      //this.pushIncomming({roomId: this.roomId, userId: user.id })
     },
     selectHandler() {
             this.createGame({
@@ -110,17 +113,21 @@ export default {
     },
   async mounted() {
    
-    this.roomId = await this.$route.params.roomId
-    this.incommingUser = await this.getRoomIncomming(this.roomId).then((resp) => {
-      this.$store.commit('SetIncommingUser', resp)
-      console.log(resp)
-      return resp
-    })
+    //this.roomId = await this.$route.params.roomId
+    //this.incommingUser = await this.getRoomIncomming(this.roomId).then((resp) => {
+      //this.$store.commit('SetIncommingUser', resp)
+      //console.log(resp)
+      //return resp
+    //})
     
     //
     //this.fetchRoom(this.$route.params.roomId)
     //this.room.timestamp  = moment(this.room.timestamp).locale('uk').format('LL')
-  },
+      this.loading = true
+      this.roomId = await this.$route.params.roomId
+      this.incommingUser = await this.getRoomIncomming(this.roomId).then( resp => { return resp })
+      this.loading = false
+    }
 }
 
 </script>

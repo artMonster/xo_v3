@@ -5,45 +5,32 @@ import * as api from "@/firebase/init"
 export default {
     actions: {
         async login({ commit }, { email, password }) {
-            try {
-                return new Promise((resolve, reject) => {
-                        api.auth.signInWithEmailAndPassword(email, password)
-                            .then(resp => resolve(resp))
-                            .catch(() => reject)
-                    })
-                    //const sing = await api.auth.signInWithEmailAndPassword(email, password).then(r => {
-                    //const userObj = {
-                    //                        id: r.user.uid,
-                    //email: r.user.email,
-                    //name: 'name',
-                    //roomId: 'Lobby',
-                    //timestamp: Date.now()
-                    //}
-                    //api.addUser(userObj, r => {})
-                    //api.getUser(r.user.uid, r => {
-                    //commit('setAuth', r)
-                    //})
+            return await api.auth.signInWithEmailAndPassword(email, password).then(resp => {
+                let result = {
+                    _new: resp.additionalUserInfo.isNewUser,
+                    id: resp.user.uid,
+                    email: resp.user.email,
+                    name: resp.user.displayName,
+                }
+                console.log(resp)
+                return result
+
+            })
 
 
-                //Vue.http.get(url)
-                //.then(response => resolve(response))
-                //.catch(() => reject)
-                //})
-            } catch (e) {
-                commit('setError', e)
-                throw e
-            }
         },
-        async getUserData({ commit }, payload) {
-            try {
-                return new Promise((resolve, reject) => {
-                    api.getUser(payload, resp => resolve(resp))
-                })
-            } catch (e) {
-                commit('setError', e)
-                throw e
-            }
-        },
+        // async log2in({ commit }, { email, password }) {
+        //     try {
+        //         return new Promise((resolve, reject) => {
+        //             api.auth.signInWithEmailAndPassword(email, password)
+        //                 .then(resp => resolve(resp))
+        //                 .catch(() => reject)
+        //         })
+        //     } catch (e) {
+        //         commit('setError', e)
+        //         throw e
+        //     }
+        // },
         async logout({ commit }) {
             try {
                 var resp = await api.auth.signOut()
@@ -91,7 +78,7 @@ export default {
         }
     },
     state: {
-        authInfo: []
+        AuthUser: []
     },
     getters: {
         getAuthUser(state) {

@@ -17,9 +17,9 @@ export default {
                 room: room
             }
             try {
-                api.updateUser(updateObj, room => {
-                    ctx.commit("setRooms", room)
-                })
+                // api.updateUser(updateObj, room => {
+                //     ctx.commit("setRooms", room)
+                // })
             } catch (e) {
                 console.log(e)
             }

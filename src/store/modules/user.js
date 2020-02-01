@@ -2,14 +2,13 @@ import * as api from '@/firebase/init'
 
 export default {
     actions: {
-        fetchUsers(ctx) {
-            try {
-                api.getUsers(users => {
-                    ctx.commit('setUsers', users)
-                })
-            } catch (e) {
-                console.log(e)
-            }
+        async fetchUsers(ct) {
+            var result = []
+            api.database.ref(`/users/`).on("value", function(snapshot) {
+                snapshot && snapshot.val() ? result = Object.keys(snapshot.val()).map(key => ({...snapshot.val()[key], id: key })) : []
+                ct.commit('SetUsers', result)
+                return result
+            })
         },
         switchUser({ commit }, payload) {
             try {
@@ -17,6 +16,35 @@ export default {
             } catch (e) {
                 console.log(e)
             }
+        },
+        async getUserData({ commit }, payload) {
+            var result = []
+            api.database.ref(`/users/${payload}`).on("value", function(snapshot) {
+                if (snapshot && snapshot.val()) {
+                    result = snapshot.val()
+                } else {
+                    result = snapshot
+                }
+                commit('setAuthUser', result)
+            })
+
+            return result
+        },
+        async getUs2erData({ commit }, payload) {
+            try {
+                var result = []
+                const resp = await api.database.ref(`/users/${payload}`).on("value")
+                return resp
+
+            } catch (e) {
+                console.log(e)
+            }
+
+            //return snapshot
+            //snapshot && snapshot.val() ? result = snapshot.val() : result = []
+
+            //commit('setAuthUser', result)
+            //return result
         },
         async setUser({ commit, dispatch }, room) {
             const userId = await dispatch('getUid')
@@ -28,16 +56,16 @@ export default {
                 }
             }
             try {
-                api.updateUser(updateObj, room => {
-                    commit("switchRoom", room)
-                })
+                // api.updateUser(updateObj, room => {
+                //     commit("switchRoom", room)
+                // })
             } catch (e) {
                 console.log(e)
             }
         }
     },
     mutations: {
-        setUsers(state, users) {
+        SetUsers(state, users) {
             state.users = users
         },
         switchUser(state, user) {
@@ -51,7 +79,7 @@ export default {
         users: [],
     },
     getters: {
-        users(state) {
+        GetAllUsers(state) {
             return state.users
         },
         checkedUser(state) {
