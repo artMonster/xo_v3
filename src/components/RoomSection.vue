@@ -41,7 +41,7 @@ export default {
     async selectRoom(room) {
       try {
         await this.pushIncomming({room})
-        await this.$router.push({ name: 'room', params: { roomId: room } }) 
+        await this.$router.push({ name: 'room', params: { roomId: room , AuthUser: $route.params.AuthUser} }) 
       } catch (e) {
         console.log(e)
       }

@@ -31,7 +31,7 @@ const routes = [{
         meta: { layout: 'main' },
         props: true,
         beforeEnter: (to, from, next) => {
-            if (to.params.sing) {
+            if (to.params.AuthUser) {
                 next();
             } else {
                 next({ name: 'singin' })
@@ -59,7 +59,7 @@ const routes = [{
         name: 'singout',
         meta: { layout: 'empty' },
         component: () =>
-            import ('@/views/SingOut.vue'),
+            import ('@/views/SingOutPage.vue'),
     }
 ]
 

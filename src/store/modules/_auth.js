@@ -37,30 +37,39 @@ export default {
         async getUserData({ commit }, payload) {
             try {
                 return new Promise((resolve, reject) => {
-                    api.getUser(payload.id, resp => resolve(resp))
+                    api.getUser(payload, resp => resolve(resp))
                 })
             } catch (e) {
                 commit('setError', e)
                 throw e
             }
         },
-        logout({ commit }) {
+        async logout({ commit }) {
             try {
-                api.auth.signOut()
+                var resp = await api.auth.signOut()
                 commit('clearInfo')
+                return resp
             } catch (e) {
                 commit('setError', e)
                 throw e
             }
         },
-        async getUid(ctx) {
-            const user = await api.auth.currentUser
-            return new Promise((resolve, reject) => {
-                api.getUser(user.uid, r => {
-                    ctx.commit('setAuth', r)
-                    resolve(r)
-                })
-            })
+        async getUid() {
+            try {
+                const user = await api.auth.currentUser
+                console.log(user)
+                let result = {
+                    _new: false,
+                    id: user.uid,
+                    email: user.email,
+                    name: user.displayName,
+                }
+                return result
+
+            } catch (e) {}
+
+
+
         },
     },
     mutations: {

@@ -3,17 +3,17 @@
       <nav class="navbar navbar-expand navbar-dark bg-dark">
         <div class="navbar-collapse">
           <ul class="navbar-nav mr-auto" id="navbarMain">
-            <router-link to="/" v-slot="{ href, route, navigate, isActive, isExactActive }">
-              <li :class="[isActive && 'router-link-active', isExactActive && 'router-link-exact-active']">
+            <router-link :to="{ name: 'home', params: { AuthUser: $route.params.AuthUser }}" v-slot="{ href, route, navigate }">
+              <li class="router-link-active">
                 <a class="nav-link" :href="href" @click="navigate">Lobby</a>
               </li>
             </router-link>
-            <router-link to="/roomplace" v-slot="{ href, route, navigate, isActive, isExactActive }">
+            <router-link :to="{ name: 'roomplace', params: { AuthUser: $route.params.AuthUser } }" v-slot="{ href, route, navigate, isActive, isExactActive }">
               <li :class="[isActive && 'router-link-active', isExactActive && 'router-link-exact-active']">
                 <a class="nav-link" :href="href" @click="navigate">Rooms Place</a>
               </li>
             </router-link>
-            <router-link v-if="getAuthUser.roomId != 'Lobby'" to="/roomplace" v-slot="{ href, route, navigate, isActive, isExactActive }">
+            <router-link v-if="getAuthUser.roomId != 'Lobby'" :to="{ name: 'roomplace', params: { AuthUser: $route.params.AuthUser } }" v-slot="{ href, route, navigate, isActive, isExactActive }">
               <li :class="[isActive && 'router-link-active', isExactActive && 'router-link-exact-active']">
                 <a class="nav-link btn btn-primary" :href="href" @click="navigate">EXIT ROOM</a>
               </li>
@@ -41,7 +41,7 @@
               </span>
             </a>
           </li>
-          <router-link to="/singout" v-slot="{ href, navigate}">
+          <router-link :to="{ name: 'singout' }" v-slot="{ href, navigate}">
               <li class="nav-item" >
                 <a class="nav-link" :href="href" @click="navigate">
                   <span>
