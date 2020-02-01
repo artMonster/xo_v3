@@ -15,27 +15,8 @@
                   <div class="row no-gutters justify-content-center text-center" >
                     <div class="col-6">
                       <user-incomming
-                        v-for="user in getIncomming" :key="user.timestamp"
-                        v-if="user.side === 'o'"
-                        :user="user"
-                        :auth="getAuth"
-                        @switch-user="switchUser">
-                      </user-incomming>
-                    </div>
-                    <div class="col-6">
-                      <user-incomming
-                      v-for="user in getIncomming" :key="user.timestamp"
-                        v-if="user.side === 'x'"
-                        :user="user"
-                        :auth="getAuth"
-                        @switch-user="switchUser">
-                      </user-incomming>
-                    </div>
-                    <div class="col-12">
-                      <user-incomming
-                      v-for="user in getIncomming" :key="user.timestamp"
-                        v-if="!(user.side === 'o' || user.side === 'x')"
-                        :user="user"
+                        v-for="u in getIncomming" :key="u.timestamp"
+                        :userdata="u"
                         :auth="getAuth"
                         @switch-user="switchUser">
                       </user-incomming>
@@ -146,7 +127,7 @@ export default {
     this.roomId = await this.$route.params.roomId
     this.room = await this.$store.getters.room
     await this.fetchRoom(this.roomId)
-    this.room.timestamp  = moment(this.room.timestamp).locale('uk').format('LL')
+    //this.room.timestamp  = moment(this.room.timestamp).locale('uk').format('LL')
   },
 }
 

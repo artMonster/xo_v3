@@ -4,11 +4,11 @@ import VueRouter from 'vue-router'
 Vue.use(VueRouter)
 
 const routes = [{
-        path: '/',
-        name: 'home',
+        path: '/roomplace',
+        name: 'roomplace',
         meta: { layout: 'main' },
         component: () =>
-            import ('@/views/Home.vue')
+            import ('@/views/Rooms.vue')
     },
     {
         path: '/room/:roomId',
@@ -19,33 +19,33 @@ const routes = [{
             if (to.params.roomId) {
                 next();
             } else {
-                next({ name: 'Login' })
+                next({ name: 'singin' })
             }
         },
         component: () =>
             import ('@/views/Game.vue')
     },
     {
-        path: '/game',
-        name: 'game',
+        path: '/',
+        name: 'home',
         meta: { layout: 'main' },
         props: true,
+        beforeEnter: (to, from, next) => {
+            if (to.params.sing) {
+                next();
+            } else {
+                next({ name: 'singin' })
+            }
+        },
         component: () =>
-            import ('@/views/Room.vue')
-    },
-    {
-        path: '/about',
-        name: 'about',
-        meta: { layout: 'main' },
-        component: () =>
-            import ('@/views/About.vue')
+            import ('@/views/Home.vue')
     },
     {
         path: '/singin',
         name: 'singin',
         meta: { layout: 'empty' },
         component: () =>
-            import ('@/views/SingIn.vue')
+            import ('@/views/SinginPage.vue')
     },
     {
         path: '/register',

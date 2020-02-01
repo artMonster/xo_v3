@@ -8,6 +8,16 @@
                 <a class="nav-link" :href="href" @click="navigate">Lobby</a>
               </li>
             </router-link>
+            <router-link to="/roomplace" v-slot="{ href, route, navigate, isActive, isExactActive }">
+              <li :class="[isActive && 'router-link-active', isExactActive && 'router-link-exact-active']">
+                <a class="nav-link" :href="href" @click="navigate">Rooms Place</a>
+              </li>
+            </router-link>
+            <router-link v-if="getAuthUser.roomId != 'Lobby'" to="/roomplace" v-slot="{ href, route, navigate, isActive, isExactActive }">
+              <li :class="[isActive && 'router-link-active', isExactActive && 'router-link-exact-active']">
+                <a class="nav-link btn btn-primary" :href="href" @click="navigate">EXIT ROOM</a>
+              </li>
+            </router-link>
           </ul>
         </div>
         <ul class="navbar-nav mx-auto">
@@ -31,7 +41,7 @@
               </span>
             </a>
           </li>
-          <router-link to="/singout" v-slot="{ href, navigate, isActive, isExactActive }">
+          <router-link to="/singout" v-slot="{ href, navigate}">
               <li class="nav-item" >
                 <a class="nav-link" :href="href" @click="navigate">
                   <span>
@@ -52,6 +62,6 @@ import { mapGetters, mapActions } from 'vuex'
 
 export default {
   name: 'HeaderXo',
-  computed: mapGetters(['getAuth']),
+  computed: mapGetters(['getAuthUser']),
 }
 </script>

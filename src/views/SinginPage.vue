@@ -24,21 +24,38 @@
 <script>
 
 export default {
-    name: 'singin',
+    name: 'SinginPage',
     data: () => ({
         email: 'orishka81@gmail.com',
         pass: '222222',
     }),
     methods: {
         async submitHandler() {
-            const singinData = {
+            const singinUserData = {
                 email: this.email, 
                 password: this.pass,
             }
             try {
-                const sing = await this.$store.dispatch('login', singinData ).then(() => {
-                    this.$router.push('/')
+                const sing = await this.$store.dispatch('login', singinUserData ).then((resp) => {
+                    let result = {
+                        _new: resp.additionalUserInfo.isNewUser,
+                        id: resp.user.uid,
+                        email: resp.user.email,
+                        name: resp.user.displayName,
+                    }
+                    return result
                 })
+                if (sing._new) {
+                    // add user to DB
+                    
+                } else {
+                    // get user in DB
+                    const authUserData = await this.$store.dispatch('getUserData', sing ).then((resp) => {
+                        this.$store.commit('setAuthUser', resp)
+                        return resp
+                    })
+                    this.$router.push({ name: 'home', params: { sing: authUserData }})
+                }
                 
             } catch (e) {
                 console.log(e)

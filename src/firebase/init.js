@@ -30,7 +30,9 @@ export function getAllRooms(cont) {
 export function getRoom(rId, cont) {
     console.log(rId)
     database.ref(`/rooms/${rId}`).on("value", function(snapshot) {
-        cont(snapshot.val())
+        setTimeout(function() {
+            cont(snapshot.val())
+        }, 10)
     })
 }
 

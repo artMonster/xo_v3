@@ -8,7 +8,6 @@
       <div class="card-body p-0">
         <b-list-group>
           <room
-            v-if="roomsCount"
             v-for="(room, index) in rooms"
             :key="index"
             :room="room"
@@ -36,7 +35,7 @@ export default {
   data: () => ({
     loading: true,
   }),
-  computed: mapGetters(["rooms", "roomsCount", "getAuth"]),
+  computed: mapGetters(["rooms", "roomsCount", "getAuthUser"]),
   methods: {
     ...mapActions(["fetchRooms", "pushIncomming", 'getUid']),
     async selectRoom(room) {

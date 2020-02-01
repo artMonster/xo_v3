@@ -14,15 +14,17 @@
 </template>
 
 <script>
+import moment from 'moment'
 export default {
   name: 'User',
+    components: { moment },
   props: {
     user: Object,
     active: Boolean,
     me: String,
   },
   mounted() {
-      this.user.timestamp = moment(this.room.timestamp).locale('uk').format('LL')
+      //this.user.timestamp = moment(this.user.timestamp).locale('uk').format('LL')
   },
 }
 </script>

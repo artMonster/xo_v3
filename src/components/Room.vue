@@ -25,7 +25,7 @@ export default {
     active: Boolean,
   },
   mounted() {
-      this.room.timestamp = moment(this.room.timestamp).locale('uk').format('LL')
+      //this.room.timestamp = moment(this.room.timestamp).locale('uk').format('LL')
   },
 }
 </script>
