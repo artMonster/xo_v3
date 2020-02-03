@@ -37,6 +37,20 @@ export default {
             var ress = api.database.ref().update(upd)
 
         },
+        async leaveIncomming({ commit }, { roomId, userId, side = 0 }) {
+            let updateUser = {
+                roomId: 'RoomsPlace'
+                    //timestamp: Date.now()
+            }
+
+            let upd = {}
+            upd['/users/' + userId + '/roomId/'] = updateUser.roomId
+
+
+            var ressUpd = api.database.ref().update(upd)
+            var ressRem = api.database.ref('/rooms/' + roomId + '/incoming/' + userId).remove()
+
+        },
         async createRoom({ commit }, { title, lock, author, timestamp = Date.now() }) {
             try {
                 return await api.database.ref(`/rooms/`).push({ title, lock, author, timestamp }).then(resp => { return resp })

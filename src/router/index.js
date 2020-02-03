@@ -18,16 +18,14 @@ const routes = [{
         props: true,
         component: () =>
             import ('@/views/Game.vue')
-    },
-    {
+    }, {
         path: '/singin',
         name: 'SingIn',
         meta: { layout: 'empty' },
         props: true,
         component: () =>
             import ('@/views/SinginPage.vue')
-    },
-    {
+    }, {
         path: '/',
         name: 'Home',
         meta: { layout: 'main' },
@@ -43,8 +41,7 @@ const routes = [{
         props: true,
         component: () =>
             import ('@/views/About.vue')
-    },
-    {
+    }, {
         path: '/singout',
         name: 'SingOut',
         meta: { layout: 'empty' },

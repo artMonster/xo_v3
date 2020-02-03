@@ -45,11 +45,9 @@
                 <a class="nav-link" :href="href" @click="navigate">Rooms Place</a>
               </li>
             </router-link>
-            <router-link v-if="$route.name === `Room`" :to="{ name: `RoomsPlace`}" v-slot="{ href, route, navigate, isActive, isExactActive }">
-              <li :class="[isActive && `router-link-active`, isExactActive && `router-link-exact-active`]">
-                <a class="nav-link btn btn-primary" :href="href" @click="navigate">EXIT ROOM</a>
-              </li>
-            </router-link>
+            <li class="nav-item" v-if="$route.name === `Room`" >
+              <a class="nav-link btn btn-primary" @click="leaveHandler"><span>Leave to Place <b-icon icon="box-arrow-right" aria-hidden="true"></b-icon></span> </a>
+            </li>
           </ul>
         </div>
       </nav>
@@ -64,6 +62,16 @@ import { mapGetters, mapActions } from 'vuex'
 export default {
   name: 'HeaderXo',
   computed: mapGetters(['getAuthUser']),
+  methods: {
+    ...mapActions(['leaveIncomming']),
+    async leaveHandler() {
+      const userId = this.$route.params.user.id
+      const roomId = this.$route.params.roomId
+      await this.leaveIncomming({ roomId: roomId, userId: userId })
+      this.$router.push({ name: 'RoomsPlace' })
+    }
+  }
 
 }
+
 </script>

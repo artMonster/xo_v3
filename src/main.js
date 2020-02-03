@@ -17,7 +17,6 @@ Vue.use(VueResource)
 Vue.use(VueChatScroll)
 Vue.component('Loader', Loader)
 
-
 Vue.config.debug = true
 
 let app
