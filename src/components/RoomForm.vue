@@ -40,10 +40,11 @@ export default {
       lock: false,
       st: null,
       submittedNames: [],
+      creatrRoomId: null,
     }
   },
   methods: {
-    ...mapActions(["createRoom"]),
+    ...mapActions(["createRoom", "pushIncomming"]),
     checkFormValidity() {
       let valid = this.$refs.form.checkValidity()
       this.st = valid && this.title.length > 3 && this.title.length < 16
@@ -60,18 +61,20 @@ export default {
         }
       const user = this.$route.params.user
       
-      const result = await this.createRoom({
+      this.creatrRoomId = await this.createRoom({
         title: this.title,
         lock: this.lock,
         author: user.id
       }).then(resp => { 
-        return resp 
+        return resp.key
       })
+      
       
       
       this.$nextTick(() => {
         this.$bvModal.hide("modal-prevent-closing")
-        this.$router.push({ name: 'Room', params: { roomId: result.key}}) 
+        const resp = this.pushIncomming({roomId: this.creatrRoomId, userId: user.id }).then(resp => { return resp })
+        this.$router.push({ name: 'Room', params: { roomId: this.creatrRoomId}}) 
       })
       this.title = ""
     },
