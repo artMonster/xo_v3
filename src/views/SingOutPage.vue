@@ -1,6 +1,8 @@
 <template>
   <section class="singout">
-    <a href="/singin">home</a>
+    <div class="text-center my-5">
+      <a href="/singin" class="btn btn-info"> home </a>
+    </div>
   </section>
 </template>
 <script>

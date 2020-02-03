@@ -1,6 +1,6 @@
 <template>
     <div class="d-inline-block p-4">
-        <b-button  variant="primary" class="btn btn-lg" @click="newGameHandler"> [ START GAME ] </b-button>
+        <b-button  variant="primary" class="btn btn-lg" @click="newGameHandler">Start Game</b-button>
     </div>
 </template>
 

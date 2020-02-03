@@ -44,7 +44,7 @@ export default {
                     return resp
                 })
                 if (sing && sing.id)  {
-                    this.$router.push({ name: 'Home', params: { user: sing.id }})
+                    this.$router.push({ name: 'Home'})
                 }
                 
         },

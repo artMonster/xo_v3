@@ -43,7 +43,7 @@ export default {
         async getUid({ commit }) {
             try {
                 let user = await api.auth.currentUser
-                console.log(user)
+                    //console.log(user)
                 let result = {
                     _new: false,
                     id: user.uid,

@@ -29,20 +29,20 @@ auth.onAuthStateChanged((user) => {
             render: h => h(App),
         }).$mount('#app')
     }
-    if (!router.currentRoute.name === 'SingIn') {
-        router.beforeEach((to, from, next) => {
-            if (!user && !from.name === 'SingIn') {
-                next('/singin')
-            } else {
-                console.log(from)
-                let auth = {
-                    id: user.uid
-                }
-                to.params.user = auth
-                next()
-            }
 
-        })
-    }
+    router.afterEach((to, from) => {
+        if (!user) {
+            if (!router.currentRoute.name === 'SingIn') {
+                next('/singin')
+            }
+        } else {
+            let auth = {
+                id: user.uid
+            }
+            to.params.user = auth
+        }
+
+    })
+
 
 })

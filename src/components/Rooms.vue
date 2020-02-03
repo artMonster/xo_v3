@@ -18,7 +18,7 @@ export default {
     components: { Room },
     data: () => ({
         loading: false,
-        rooms: []
+        //rooms: []
     }),
     computed: mapGetters(["GetAllRooms"]),
     methods: {
@@ -32,14 +32,13 @@ export default {
         },
         async selectRoom({roomId, userId}) {
             var user = await this.getUid()
-            console.log(roomId, userId)
             const result = await this.pushIncomming({roomId: roomId, userId: userId }).then(resp => { return resp })
-            this.$router.push({ name: 'Room', params: { roomId: roomId, AuthUser: user }}) 
+            this.$router.push({ name: 'Room', params: { roomId: roomId}}) 
         }
     },
     async mounted() {
         this.loading = true
-        this.rooms = await this.getRooms().then( resp => { return resp } )          
+        await this.getRooms().then( resp => { return resp } )          
         this.loading = false
     },
 }

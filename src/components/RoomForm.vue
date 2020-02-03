@@ -54,13 +54,13 @@ export default {
       bvModalEvt.preventDefault()
       this.submitHandler()
     },
-    submitHandler() {
+    async submitHandler() {
       if (!this.checkFormValidity()) {
           return
         }
-      const user = this.$route.params.user.id
+      const user = this.$route.params.user
       
-      const result = this.createRoom({
+      const result = await this.createRoom({
         title: this.title,
         lock: this.lock,
         author: user.id
@@ -71,7 +71,7 @@ export default {
       
       this.$nextTick(() => {
         this.$bvModal.hide("modal-prevent-closing")
-        //this.$router.push({ name: 'Room', params: { roomId: roomId, AuthUser: user }}) 
+        this.$router.push({ name: 'Room', params: { roomId: result.key}}) 
       })
       this.title = ""
     },

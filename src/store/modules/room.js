@@ -16,14 +16,16 @@ export default {
             var result = []
             await api.database.ref(`/rooms/${payload}/incoming/`).on("value", function(snapshot) {
                 snapshot && snapshot.val() ? result = Object.keys(snapshot.val()).map(key => ({...snapshot.val()[key], id: key })) : []
+                commit('SetIncommingUsers', result)
                 return result
             })
-            commit('SetIncommingUsers', result)
+
         },
-        async pushIncomming({ commit }, { roomId, userId }) {
+        async pushIncomming({ commit }, { roomId, userId, side = 0 }) {
 
             let userObj = {
                 id: userId,
+                side: side,
                 timestamp: Date.now()
             }
 
@@ -32,20 +34,13 @@ export default {
             upd['/users/' + userId + '/roomId/'] = roomId
             upd['/rooms/' + roomId + '/incoming/' + userId] = userObj
 
-            api.database.ref().update(upd, function(snapshot) {
-                return snapshot
-            })
+            var ress = api.database.ref().update(upd)
+
         },
         async createRoom({ commit }, { title, lock, author, timestamp = Date.now() }) {
             try {
-                console.log({ title, lock, author, timestamp })
-                    // payload.timestamp = Date.now()
-                    // return new Promise((resolve) => {
-                    //     api.addRoom(payload, resp => {
-                    //         resolve(resp)
+                return await api.database.ref(`/rooms/`).push({ title, lock, author, timestamp }).then(resp => { return resp })
 
-                //     })
-                // })
             } catch (e) {
                 commit('setError', e)
                 throw e

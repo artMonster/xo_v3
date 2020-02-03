@@ -20,14 +20,6 @@ const routes = [{
             import ('@/views/Game.vue')
     },
     {
-        path: '/',
-        name: 'Home',
-        meta: { layout: 'main' },
-        props: true,
-        component: () =>
-            import ('@/views/Home.vue')
-    },
-    {
         path: '/singin',
         name: 'SingIn',
         meta: { layout: 'empty' },
@@ -35,6 +27,15 @@ const routes = [{
         component: () =>
             import ('@/views/SinginPage.vue')
     },
+    {
+        path: '/',
+        name: 'Home',
+        meta: { layout: 'main' },
+        props: true,
+        component: () =>
+            import ('@/views/Home.vue')
+    },
+
     {
         path: '/register',
         name: 'Register',

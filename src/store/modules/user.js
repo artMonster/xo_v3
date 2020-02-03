@@ -78,6 +78,7 @@ export default {
     state: {
         users: [],
         incomming: [],
+        incommingReady: [],
     },
     getters: {
         GetAllUsers(state) {
@@ -86,6 +87,59 @@ export default {
         GetIncommingUsers(state) {
             return state.incomming
         },
+        GetIncommingUsersReady(state, getters) {
+            const obj = Object.entries(getters.GetIncommingUsers)
+            var arr = []
+            for (let [key, value] of obj) {
+                if (value.side !== 0) {
+                    arr.push(getters.GetIncommingUsers[key])
+                }
+            }
+            return state.incommingReady = arr
+        },
+
+        //({side}) => [k, fn(v, k, i)]
+
+
+        //.find(item => return item.side != 0 )
+        //     console.log(side)
+        //     let ready = []
+        //     if (side != 0) {
+        //         ready.push({ ready: side })
+        //     }
+        //     console.log(ready)
+        //     return side
+        // },
+        // 0)
+        // return state.incomming.find(inc => {
+        //         let a = 0
+        //         console.log(inc)
+        //         if (inc.side != 0) {
+        //             a++
+        //         }
+
+        //         return { inc: a }
+        //     })
+        // state.incomming.find(item => item.id === id)
+        //return { check }
+
+
+        // state.incomming.forEach(({ check }) => {
+        //         if (check.side) {
+        //             return { check }
+        //         }
+        //     })
+        // state.incomming.map(({ id, side }) => {
+        //     console.log(id)
+        //     let result = {
+        //         id: id,
+        //         side: side
+        //     }
+        //     if (side === 0) {
+        //         result = {}
+        //     }
+        //     return result
+        // })
         checkedUser(state) {
             return state._cuid
         },
