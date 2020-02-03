@@ -8,7 +8,6 @@
         
         <div class="col-md-5 bg-secondary">
           <p class="text-white pt-3 text-center small">RoomID : {{ roomId }} </p>
-          <p class="text-white  text-center small"> {{ room.timestamp }} </p>
           <div>
             <div class="row no-gutters justify-content-center align-items-end">
               <dd class="col-3 text-center mb-2">
@@ -24,11 +23,6 @@
                     <label class="custom-control-label text-light" for="ch_x"> [ x ] </label>
                 </div>
               </dd>
-              <div class="col-12">
-                <div class="my-3 text-center pt-3">
-                   <b-button variant="warning" class="btn btn-lg" @click="newArenaHandler"> * Start tournaments * </b-button>
-                </div>
-              </div>
             </div>
           </div>
         </div>
@@ -49,26 +43,17 @@
                 </b-list-group>
             </div>
             <div v-if="GetIncommingUsersReady.length > 1" class="card-footer text-center">
-              <game-form :roomId="roomId"></game-form>
+              <game-form :theGame="theGame" :roomId="roomId"></game-form>
               <b-button v-if="GetIncommingUsersReady.length > 2"  variant="warning" class="btn btn-lg" @click="newArenaHandler"> *** Start tournaments *** </b-button>
             </div>
           </div>
         </div>
-      
       </div>
-      
-      <div hidden class="row justify-content-center text-center">
-        <div class="col-6 bg-dark">
-          <game-board></game-board>
-        </div>
-      </div>
-
     </div>
   </div>
 </template>
 
 <script>
-import GameBoard from './GameBoard'
 import UserIncomming from "./UserIncomming.vue"
 import GameForm from "./GameForm.vue"
 
@@ -82,22 +67,16 @@ export default {
     roomId: null,
     room: [],
     preGame: [],
+    theGame: [],
     selectSide: null,
   }),
-  components: { GameForm, UserIncomming, GameBoard },
+  components: { GameForm, UserIncomming },
   computed: mapGetters(["getAuthUser", "GetIncommingUsers", "GetIncommingUsersReady"]),
   methods: {
-    ...mapActions(["getRoomIncomming","pushIncomming", 'getUid', "switchUser"]),
+    ...mapActions(["getRoomIncomming","pushIncomming", "switchUser"]),
     async ss(side) {
       const userId = await this.$route.params.user.id
       this.preGame = await this.pushIncomming({roomId: this.roomId, userId: userId, side: side })
-      //this.pushIncomming({roomId: this.roomId, userId: user.id })
-    },
-    selectHandler() {
-      this.createGame({
-          option: this.option,
-          roomId: this.roomId,
-      })
     },
     newArenaHandler() {
         this.createGame({
@@ -111,19 +90,7 @@ export default {
     this.roomId = this.$route.params.roomId
     await this.getRoomIncomming(this.roomId).then( resp => { return resp })
     this.loading = false
-    //this.roomId = await this.$route.params.roomId
-    //this.incommingUser = await this.getRoomIncomming(this.roomId).then((resp) => {
-      //this.$store.commit('SetIncommingUser', resp)
-      //console.log(resp)
-      //return resp
-    //})
-    
-    //
-    //this.fetchRoom(this.$route.params.roomId)
-    //this.room.timestamp  = moment(this.room.timestamp).locale('uk').format('LL')
-      
-      //this.loading = false
-    }
+  }
 }
 
 </script>

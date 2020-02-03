@@ -5,34 +5,44 @@
 </template>
 
 <script>
-import { mapActions } from "vuex"
+import { mapActions, mapGetters } from "vuex"
 export default {
     name: "GameForm",
     props: {
+        theGame: Array,
         roomId: String,
     },
     data: () => ({
+        usersArena: [],
         option: {    
-            stride: 'o',
-            x: {
-                id: 'id',
-                score: 0,
-            },
-            o: {
-                id: 'id',
-                score: 0,
-            },
-            start: false,
-        }
+            stride: 0,
+            score: [0,0],
+        },
+        createGameId: null,
     }),
+    computed: mapGetters(["GetIncommingUsersReady"]),
     methods: {
         ...mapActions(["createGame"]),
-        newGameHandler() {
-            this.createGame({
+        async newGameHandler() {
+
+            this.createGameId = await this.createGame({
+                usersArena: this.usersArena,
                 option: this.option,
                 roomId: this.roomId,
+            }).then(resp => { 
+                return resp
+            })
+            this.$router.push({ 
+                name: 'Game',
+                params: {
+                    roomId: this.roomId,
+                    gameId: this.createGameId
+                }
             })
         },
-    }
+    },
+    async mounted() {
+        this.usersArena = await this.GetIncommingUsersReady
+    },
 }
 </script>

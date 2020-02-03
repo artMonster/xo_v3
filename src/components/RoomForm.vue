@@ -69,11 +69,11 @@ export default {
         return resp.key
       })
       
-      
+      const resp = this.pushIncomming({roomId: this.creatrRoomId, userId: user.id }).then(resp => { return resp })
       
       this.$nextTick(() => {
         this.$bvModal.hide("modal-prevent-closing")
-        const resp = this.pushIncomming({roomId: this.creatrRoomId, userId: user.id }).then(resp => { return resp })
+        
         this.$router.push({ name: 'Room', params: { roomId: this.creatrRoomId}}) 
       })
       this.title = ""

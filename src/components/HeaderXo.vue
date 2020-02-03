@@ -9,7 +9,8 @@
                 <b-icon icon="person-fill" aria-hidden="true"></b-icon>
               </span>
               <span class="text-info">
-               
+                <small>{{ $route.params.user ? $route.params.user.id : '' }}</small>
+                
               </span>
             </a>
            </li>
@@ -19,7 +20,8 @@
                 <b-icon icon="flag-fill" aria-hidden="true"></b-icon>
               </span>
               <span class="text-success">
-               
+                <small>{{ $route.params.roomId ? $route.params.roomId : ' game ' }}</small><br>
+                <small>{{ $route.params.gameId ? $route.params.gameId : 'room' }}</small>
               </span>
             </a>
           </li>

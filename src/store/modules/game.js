@@ -24,8 +24,69 @@ const linesCell = [
 
 export default {
     actions: {
-        async createGame({ commit }, payload) {
+        async createGame({ commit }, { roomId, usersArena, option, board, timestamp = Date.now() }) {
+
+            var obj = {
+                usersArena,
+                option,
+                board: {
+                    steps: [
+                        [0, 0, 0, 0, 0, 0, 0, 0, 0]
+                    ],
+                    current: [0, 0, 0, 0, 0, 0, 0, 0, 0],
+                },
+                timestamp,
+            }
             try {
+                var gameId = await api.database.ref().child('games').push().key
+                var upd = {}
+                upd['/games/' + gameId] = obj
+                upd['/rooms/' + roomId + '/games/'] = gameId
+                const result = await api.database.ref().update(upd);
+                return gameId
+            } catch (e) {
+                commit('setError', e)
+                throw e
+            }
+        },
+        async getGameArenaData({ commit }, payload) {
+            var result = {}
+
+            try {
+
+                api.database.ref('/games/' + payload).on("value", function(snapshot) {
+                    if (snapshot && snapshot.val()) {
+                        result = snapshot.val()
+                    } else {
+                        result = snapshot
+                    }
+                    commit('setGameArenaBoard', result.board)
+                    commit('setGameArena', result.option)
+                    commit('setGameArenaUsers', result.usersArena)
+                    return result
+                })
+            } catch (e) {
+                commit('setError', e)
+                throw e
+            }
+
+
+
+        },
+
+        async create2Game({ commit }, payload) {
+            try {
+                // export function addGame(obj, cont) {
+                //     var newGameKey = database.ref().child('games').push().key
+                //     var upd = {}
+                //     upd['/games/' + newGameKey] = obj.game
+                //     upd['/rooms/' + obj.roomId + '/games/'] = newGameKey
+                //     const result = database.ref().update(upd);
+                //     setTimeout(function() {
+                //         cont(result)
+                //     }, 10)
+                // }
+
                 // const gameObj = {
                 //     game: {
                 //         option: payload.option,
@@ -117,24 +178,37 @@ export default {
         // },
     },
     mutations: {
+        setGameArena(state, ao) {
+            state.gameArena = ao
+        },
+        setGameArenaBoard(state, ab) {
+            state.gameArenaBoard = ab
+        },
+        setGameArenaUsers(state, au) {
+            state.gameArenaUsers = au
+        },
         setIncomming(state, users) {
             state.incommingGame = users
         },
+
+        pushSteps(state, steps) {
+            state.gameArenaBoard.steps.push(steps)
+        },
+        setSteps(state, steps) {
+            state.gameArenaBoard.steps = steps
+        },
+
         setRoom(state, room) {
             state.room = room
         },
         setGame(state, game) {
             state.gameInfo = game
         },
-        pushSteps(state, steps) {
-            state.steps.push(steps)
-        },
+
         setStep(state, step) {
             state.step = step
         },
-        setSteps(state, steps) {
-            state.steps = steps
-        },
+
         setCells(state, cells) {
             state.cells = cells
         },
@@ -149,6 +223,9 @@ export default {
         },
     },
     state: {
+        gameArenaUsers: [],
+        gameArenaBoard: [],
+        gameArena: [],
         incommingGame: [],
         room: [],
         gameInfo: [],
@@ -160,6 +237,23 @@ export default {
         checked: false,
     },
     getters: {
+        GetGameArena(state) {
+            return state.gameArena
+        },
+        GetGameArenaUsers(state) {
+            return state.gameArenaUsers
+        },
+        GetGameArenaBoard(state) {
+            return state.gameArenaBoard
+        },
+
+        getSteps(state, getters) {
+            return getters.GetGameArenaBoard.steps
+        },
+        stepsCount(state, getters) {
+            return state.gameArenaBoard.steps.length
+        },
+
         room(state) {
             return state.room
         },
@@ -172,9 +266,7 @@ export default {
         getStep(state) {
             return state.step
         },
-        getSteps(state) {
-            return state.steps
-        },
+
         taggedCell(state) {
             return state.tagged
         },
@@ -187,8 +279,6 @@ export default {
         checkedCoin(state) {
             return state.coin
         },
-        stepsCount(state) {
-            return state.steps.length
-        }
+
     }
 }

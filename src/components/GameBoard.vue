@@ -27,14 +27,14 @@
 import { mapGetters, mapActions, mapMutations } from 'vuex'
 export default {
     name: 'GameBoard',
-    computed: mapGetters(['checkedCell', 'checkedCoin', 'getSteps', 'taggedCell', 'gameInfo', 'stepsCount']),
+    computed: mapGetters(['checkedCoin', 'getSteps', 'taggedCell', 'GetGameArenaBoard', 'stepsCount', "GetGameArena"]),
     methods: {
         ...mapActions(['nextStep', 'checkedStep']),
         ...mapMutations(["setStep","pushSteps"]),
         async submit(e) {
             const c = await +e.target.radio.value
-            const cc = await this.getSteps[this.stepsCount-1]
-            cc[c] = await this.gameInfo.stride
+            const cc = await this.getSteps[this.stepsCount]
+            cc[c] = await this.GetGameArena.stride
             await this.setStep(cc)
             await this.pushSteps(cc)
             this.nextStep({
@@ -42,15 +42,14 @@ export default {
             })
         }
     },
-    async mounted() {
-
-        this.stride = await this.gameInfo.stride
-    },
     data() {
         return {
             checkCell: 10,
-            stride: 'o',
+            stride: 0,
         }
+    },
+    mounted() {
+        console.log(this.getSteps, this.stepsCount)
     },
 }
 
