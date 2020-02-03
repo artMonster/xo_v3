@@ -3,17 +3,17 @@
       <nav class="navbar navbar-expand navbar-dark bg-dark">
         <div class="navbar-collapse">
           <ul class="navbar-nav mr-auto" id="navbarMain">
-            <router-link :to="{ name: 'Home', params: { AuthUser: $route.params.AuthUser }}" v-slot="{ href, route, navigate }">
+            <router-link :to="{ name: 'Home'}" v-slot="{ href, route, navigate }">
               <li class="router-link-active">
                 <a class="nav-link" :href="href" @click="navigate">Lobby</a>
               </li>
             </router-link>
-            <router-link :to="{ name: 'RoomsPlace', params: { AuthUser: $route.params.AuthUser } }" v-slot="{ href, route, navigate, isActive, isExactActive }">
+            <router-link :to="{ name: 'RoomsPlace'}" v-slot="{ href, route, navigate, isActive, isExactActive }">
               <li :class="[isActive && 'router-link-active', isExactActive && 'router-link-exact-active']">
                 <a class="nav-link" :href="href" @click="navigate">Rooms Place</a>
               </li>
             </router-link>
-            <router-link v-if="getAuthUser && getAuthUser.roomId != 'Lobby'" :to="{ name: 'RoomsPlace', params: { AuthUser: $route.params.AuthUser } }" v-slot="{ href, route, navigate, isActive, isExactActive }">
+            <router-link v-if="getAuthUser && getAuthUser.roomId != 'Lobby'" :to="{ name: 'RoomsPlace'}" v-slot="{ href, route, navigate, isActive, isExactActive }">
               <li :class="[isActive && 'router-link-active', isExactActive && 'router-link-exact-active']">
                 <a class="nav-link btn btn-primary" :href="href" @click="navigate">EXIT ROOM</a>
               </li>

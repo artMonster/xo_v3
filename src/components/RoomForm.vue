@@ -58,12 +58,15 @@ export default {
       if (!this.checkFormValidity()) {
           return
         }
-      const user = this.$store.getters.getAuthUser
+      const user = this.$route.params.user.id
       
-      const result = this.$store.dispatch('createRoom', {
+      const result = this.createRoom({
         title: this.title,
         lock: this.lock,
-        author: user.id}).then(resp => { return resp })        
+        author: user.id
+      }).then(resp => { 
+        return resp 
+      })
       
       
       this.$nextTick(() => {

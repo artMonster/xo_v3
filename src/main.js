@@ -21,7 +21,7 @@ Vue.component('Loader', Loader)
 Vue.config.debug = true
 
 let app
-auth.onAuthStateChanged(() => {
+auth.onAuthStateChanged((user) => {
     if (!app) {
         app = new Vue({
             router,
@@ -29,4 +29,20 @@ auth.onAuthStateChanged(() => {
             render: h => h(App),
         }).$mount('#app')
     }
+    if (!router.currentRoute.name === 'SingIn') {
+        router.beforeEach((to, from, next) => {
+            if (!user && !from.name === 'SingIn') {
+                next('/singin')
+            } else {
+                console.log(from)
+                let auth = {
+                    id: user.uid
+                }
+                to.params.user = auth
+                next()
+            }
+
+        })
+    }
+
 })

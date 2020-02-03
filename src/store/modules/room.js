@@ -18,7 +18,7 @@ export default {
                 snapshot && snapshot.val() ? result = Object.keys(snapshot.val()).map(key => ({...snapshot.val()[key], id: key })) : []
                 return result
             })
-            commit('SetIncommingUser', result)
+            commit('SetIncommingUsers', result)
         },
         async pushIncomming({ commit }, { roomId, userId }) {
 
@@ -33,16 +33,16 @@ export default {
             upd['/rooms/' + roomId + '/incoming/' + userId] = userObj
 
             api.database.ref().update(upd, function(snapshot) {
-                commit('SetIncommingUser', snapshot)
                 return snapshot
             })
         },
-        async createRoom({ commit }, payload) {
+        async createRoom({ commit }, { title, lock, author, timestamp = Date.now() }) {
             try {
-                // payload.timestamp = Date.now()
-                // return new Promise((resolve) => {
-                //     api.addRoom(payload, resp => {
-                //         resolve(resp)
+                console.log({ title, lock, author, timestamp })
+                    // payload.timestamp = Date.now()
+                    // return new Promise((resolve) => {
+                    //     api.addRoom(payload, resp => {
+                    //         resolve(resp)
 
                 //     })
                 // })

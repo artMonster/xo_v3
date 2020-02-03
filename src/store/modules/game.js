@@ -118,7 +118,7 @@ export default {
     },
     mutations: {
         setIncomming(state, users) {
-            state.incomming = users
+            state.incommingGame = users
         },
         setRoom(state, room) {
             state.room = room
@@ -149,7 +149,7 @@ export default {
         },
     },
     state: {
-        incomming: [],
+        incommingGame: [],
         room: [],
         gameInfo: [],
         tagged: [],
@@ -164,7 +164,7 @@ export default {
             return state.room
         },
         getIncomming(state) {
-            return state.incomming
+            return state.incommingGame
         },
         gameInfo(state) {
             return state.gameInfo

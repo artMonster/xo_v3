@@ -12,7 +12,6 @@ export default {
                     email: resp.user.email,
                     name: resp.user.displayName,
                 }
-                console.log(resp)
                 return result
 
             })
@@ -41,9 +40,10 @@ export default {
                 throw e
             }
         },
-        async getUid() {
+        async getUid({ commit }) {
             try {
-                const user = await api.auth.currentUser
+                let user = await api.auth.currentUser
+                console.log(user)
                 let result = {
                     _new: false,
                     id: user.uid,
@@ -51,11 +51,10 @@ export default {
                     name: user.displayName,
                 }
                 return result
-
-            } catch (e) {}
-
-
-
+            } catch (e) {
+                commit('setError', e)
+                throw e
+            }
         },
     },
     mutations: {

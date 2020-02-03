@@ -71,16 +71,20 @@ export default {
         switchUser(state, user) {
             state._cuid = user
         },
-        SetIncommingUser(state, users) {
+        SetIncommingUsers(state, users) {
             state.incomming = users
         }
     },
     state: {
         users: [],
+        incomming: [],
     },
     getters: {
         GetAllUsers(state) {
             return state.users
+        },
+        GetIncommingUsers(state) {
+            return state.incomming
         },
         checkedUser(state) {
             return state._cuid

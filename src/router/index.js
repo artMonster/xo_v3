@@ -8,13 +8,6 @@ const routes = [{
         name: 'RoomsPlace',
         meta: { layout: 'main' },
         props: true,
-        beforeEnter: (to, from, next) => {
-            if (to.params.AuthUser) {
-                next();
-            } else {
-                next({ name: 'SingIn' })
-            }
-        },
         component: () =>
             import ('@/views/RoomsPage.vue')
     },
@@ -23,13 +16,6 @@ const routes = [{
         name: 'Room',
         meta: { layout: 'main' },
         props: true,
-        beforeEnter: (to, from, next) => {
-            if (to.params.roomId) {
-                next();
-            } else {
-                next({ name: 'RoomsPlace' })
-            }
-        },
         component: () =>
             import ('@/views/Game.vue')
     },
@@ -38,13 +24,6 @@ const routes = [{
         name: 'Home',
         meta: { layout: 'main' },
         props: true,
-        beforeEnter: (to, from, next) => {
-            if (to.params.AuthUser) {
-                next();
-            } else {
-                next({ name: 'SingIn' })
-            }
-        },
         component: () =>
             import ('@/views/Home.vue')
     },
@@ -52,6 +31,7 @@ const routes = [{
         path: '/singin',
         name: 'SingIn',
         meta: { layout: 'empty' },
+        props: true,
         component: () =>
             import ('@/views/SinginPage.vue')
     },
@@ -59,6 +39,7 @@ const routes = [{
         path: '/register',
         name: 'Register',
         meta: { layout: 'empty' },
+        props: true,
         component: () =>
             import ('@/views/About.vue')
     },
@@ -66,6 +47,7 @@ const routes = [{
         path: '/singout',
         name: 'SingOut',
         meta: { layout: 'empty' },
+        props: true,
         component: () =>
             import ('@/views/SingOutPage.vue'),
     }

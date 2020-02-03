@@ -20,7 +20,7 @@ export default {
         loading: false,
         rooms: []
     }),
-    computed: mapGetters(["GetAllRooms" , ""]),
+    computed: mapGetters(["GetAllRooms"]),
     methods: {
         ...mapActions(["getRooms", "pushIncomming", "getUid"]),
         getIncommingUserCount(room) {

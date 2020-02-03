@@ -1,5 +1,7 @@
 <template>
-  <section class="singout"></section>
+  <section class="singout">
+    <a href="/singin">home</a>
+  </section>
 </template>
 <script>
 export default {
@@ -7,7 +9,6 @@ export default {
   async mounted() {
     try {
       await this.$store.dispatch('logout')
-      this.$router.push('SingIn')
     } catch (e) {}
   },
 }

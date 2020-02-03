@@ -33,7 +33,7 @@ export default {
     }),
     computed: mapGetters(["getAuthUser"]),
     methods: {
-        ...mapActions(["login", "getUserData", "getUid"]),
+        ...mapActions(["login"]),
         async submitHandler() {
             this.loading = true
                 const singinUserData = {
@@ -43,53 +43,11 @@ export default {
                 const sing = await this.login(singinUserData).then( resp => {
                     return resp
                 })
-
-                 const res = await this.getUserData(sing.id).then( resp => { 
-                     console.log(resp)
-                     return resp 
-                })
-            //    // console.log(res)
-                this.$router.push({ name: 'Home', params: { AuthUser: res }})
-            
-            
-            // if (sing._new) {
-            //     // add user to DB
-            //     // ...
-            // } else {
-            //     // get user in DB
+                if (sing && sing.id)  {
+                    this.$router.push({ name: 'Home', params: { user: sing.id }})
+                }
                 
-            
-          
-            // }
         },
-    },
-    async mounted() {
-        var user = await this.getUid()
-        if (user) {
-            console.log(user)
-        } else {
-            user = await this.$route.params.AuthUser
-        }
-        //const user = await this.getAuthUser()
-         const res = await this.getUserData(user.id).then( resp => { 
-             console.log(resp)
-             return resp
-             
-         })
-         this.$router.push({ name: 'Home', params: { roomId: 'Lobby', AuthUser: res }})
-        
-        
-        //this.loading = true
-        //
-        // if (result) {
-            
-
-            
-                
-            
-        // } else {
-        //     //this.loading = false
-        // }
-    },
+    }
 }
 </script>

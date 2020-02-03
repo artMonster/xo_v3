@@ -1,6 +1,6 @@
 <template>
     <b-list-group>
-        <b-list-group-item class="p-0" href="#" :disabled="active >= 2" :variant="active > 2 ? 'danger' : 'primary'" @click="$emit('select-room', { room: room.id, user: $store.getters.getAuthUser.id })">
+        <b-list-group-item class="p-0" href="#" :disabled="active >= 2" :variant="active > 2 ? 'danger' : 'primary'" @click="$emit('select-room', { roomId: room.id, userId: $route.params.user.id })">
             <div class="px-3 py-2">
                 <div class="d-flex w-100 justify-content-between">
                     <div>
