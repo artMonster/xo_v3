@@ -38,7 +38,8 @@ export default {
 }
 .list-group-item+.list-group-item.active *,
 .list-group-item.active:first-child * {
-  color: #ffffff !important;
+  color: #ffffff1c !important;
+  opacity: .2!important;
 }
 .card-header {
   background-color: transparent;
@@ -85,9 +86,10 @@ svg {
 .custom-control-label::before,
 .custom-control-label::after {
   left: calc(50% - 1.5rem);
-  top: 40px;
+  top: 30px;
   margin-bottom: 0;
   border: none;
+
 }
 .custom-control-input:disabled~.custom-control-label::before,
 .custom-control-input[disabled]~.custom-control-label::before {
@@ -96,7 +98,10 @@ svg {
 dd {
   margin: 0;
 }
+
 .border-success .custom-control-label::before {
-  border: 5px solid green !important
-}
+  border: 5px solid green !important;
+  background-color: rgba(2, 2, 2, 1) !important;
+} 
+
 </style>

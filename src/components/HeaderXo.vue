@@ -10,7 +10,7 @@
               </span>
               <span class="text-info">
                 <small>{{ $route.params.user ? $route.params.user.id : '' }}</small>
-                
+                {{AU}}
               </span>
             </a>
            </li>
@@ -63,16 +63,36 @@ import { mapGetters, mapActions } from 'vuex'
 
 export default {
   name: 'HeaderXo',
-  computed: mapGetters(['getAuthUser']),
+  computed: mapGetters(['GetAuthUser']),
+
   methods: {
-    ...mapActions(['leaveIncomming']),
+    ...mapActions(['leaveIncomming', 'leaveIncomming']),
     async leaveHandler() {
       const userId = this.$route.params.user.id
       const roomId = this.$route.params.roomId
       await this.leaveIncomming({ roomId: roomId, userId: userId })
       this.$router.push({ name: 'RoomsPlace' })
     }
-  }
+  }, 
+  async mounted() {
+    this.AU = await this.GetAuthUser
+    if (this.AU && this.AU.gameId) {
+      console.log(this.AU)
+      this.$router.push({ 
+        name: 'Game',
+        params: {
+          roomId: this.AU.rootId,
+          gameId: this.AU.gameId
+        }
+      })
+    }
+  },
+  data() {
+    return {
+      loader: false,
+      AU: [],
+    }
+  },
 
 }
 

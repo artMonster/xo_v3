@@ -26,9 +26,10 @@ export default {
                     result = snapshot
                 }
                 commit('setAuthUser', result)
+                return result
             })
 
-            return result
+
         },
         async getUs2erData({ commit }, payload) {
             try {
@@ -73,6 +74,9 @@ export default {
         },
         SetIncommingUsers(state, users) {
             state.incomming = users
+        },
+        setAuthUser(state, user) {
+            state.authUser = user
         }
     },
     state: {
@@ -97,7 +101,9 @@ export default {
             }
             return state.incommingReady = arr
         },
-
+        GetAuthUser(state) {
+            return state.authUser
+        },
         //({side}) => [k, fn(v, k, i)]
 
 

@@ -31,6 +31,8 @@ export default {
 
             let upd = {}
 
+
+
             upd['/users/' + userId + '/roomId/'] = roomId
             upd['/rooms/' + roomId + '/incoming/' + userId] = userObj
 

@@ -71,7 +71,7 @@ export default {
     selectSide: null,
   }),
   components: { GameForm, UserIncomming },
-  computed: mapGetters(["getAuthUser", "GetIncommingUsers", "GetIncommingUsersReady"]),
+  computed: mapGetters(["GetAuthUser", "GetIncommingUsers", "GetIncommingUsersReady"]),
   methods: {
     ...mapActions(["getRoomIncomming","pushIncomming", "switchUser"]),
     async ss(side) {

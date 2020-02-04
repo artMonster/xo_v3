@@ -33,7 +33,7 @@ export default {
         ...mapMutations(["setStep","pushSteps"]),
         async submit(e) {
             const c = await +e.target.radio.value
-            const cc = await this.getSteps[this.stepsCount]
+            const cc = await this.getSteps[this.stepsCount-1]
             cc[c] = await this.GetGameArena.stride
             await this.setStep(cc)
             await this.pushSteps(cc)
@@ -49,7 +49,7 @@ export default {
         }
     },
     mounted() {
-        console.log(this.getSteps, this.stepsCount)
+       
     },
 }
 

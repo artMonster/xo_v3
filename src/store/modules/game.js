@@ -41,6 +41,8 @@ export default {
                 var gameId = await api.database.ref().child('games').push().key
                 var upd = {}
                 upd['/games/' + gameId] = obj
+                upd['/users/' + usersArena[0].id + '/gameId/'] = gameId
+                upd['/users/' + usersArena[1].id + '/gameId/'] = gameId
                 upd['/rooms/' + roomId + '/games/'] = gameId
                 const result = await api.database.ref().update(upd);
                 return gameId
@@ -248,10 +250,10 @@ export default {
         },
 
         getSteps(state, getters) {
-            return getters.GetGameArenaBoard.steps
+            return state.steps = getters.GetGameArenaBoard.steps
         },
         stepsCount(state, getters) {
-            return state.gameArenaBoard.steps.length
+            return state.gameArenaBoard.steps
         },
 
         room(state) {
