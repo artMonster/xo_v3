@@ -31,7 +31,6 @@ export default {
         pass: '222222',
         loading: false,
     }),
-    computed: mapGetters(["getAuthUser"]),
     methods: {
         ...mapActions(["login"]),
         async submitHandler() {

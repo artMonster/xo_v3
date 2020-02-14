@@ -26,6 +26,7 @@ export default {
     actions: {
         async createGame({ commit }, { roomId, usersArena, option, board, timestamp = Date.now() }) {
 
+            console.log(usersArena)
             var obj = {
                 usersArena,
                 option,
@@ -207,22 +208,22 @@ export default {
             state.gameInfo = game
         },
 
-        setStep(state, step) {
-            state.step = step
-        },
+        // setStep(state, step) {
+        //     state.step = step
+        // },
 
-        setCells(state, cells) {
-            state.cells = cells
-        },
-        setCheckedCell(state, checked) {
-            state.checked = checked
-        },
-        setCheckedCoin(state, coin) {
-            state.coin = coin
-        },
-        setTaggedCoin(state, coin) {
-            state.tagged = coin
-        },
+        // setCells(state, cells) {
+        //     state.cells = cells
+        // },
+        // setCheckedCell(state, checked) {
+        //     state.checked = checked
+        // },
+        // setCheckedCoin(state, coin) {
+        //     state.coin = coin
+        // },
+        // setTaggedCoin(state, coin) {
+        //     state.tagged = coin
+        // },
     },
     state: {
         gameArenaUsers: [],
@@ -256,31 +257,31 @@ export default {
             return state.gameArenaBoard.steps
         },
 
-        room(state) {
-            return state.room
-        },
-        getIncomming(state) {
-            return state.incommingGame
-        },
+        // room(state) {
+        //     return state.room
+        // },
+        // getIncomming(state) {
+        //     return state.incommingGame
+        // },
         gameInfo(state) {
             return state.gameInfo
         },
-        getStep(state) {
-            return state.step
-        },
+        // getStep(state) {
+        //     return state.step
+        // },
 
-        taggedCell(state) {
-            return state.tagged
-        },
-        curentCells(state) {
-            return state.cells
-        },
-        checkedCell(state) {
-            return state.checked
-        },
-        checkedCoin(state) {
-            return state.coin
-        },
+        // taggedCell(state) {
+        //     return state.tagged
+        // },
+        // curentCells(state) {
+        //     return state.cells
+        // },
+        // checkedCell(state) {
+        //     return state.checked
+        // },
+        // checkedCoin(state) {
+        //     return state.coin
+        // },
 
     }
 }

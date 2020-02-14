@@ -17,6 +17,9 @@ export default new Vuex.Store({
         },
         clearError(state) {
             state._error = null
+        },
+        ClearInfo(state) {
+            state.authUser = []
         }
     },
     getters: {

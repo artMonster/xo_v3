@@ -8,6 +8,7 @@ import store from './store'
 import { auth } from '@/firebase/init'
 
 import Loader from '@/components/app/loader'
+import ConsoleTop from '@/components/app/console'
 
 Vue.config.productionTip = false
 
@@ -16,6 +17,7 @@ Vue.use(IconsPlugin)
 Vue.use(VueResource)
 Vue.use(VueChatScroll)
 Vue.component('Loader', Loader)
+Vue.component('ConsoleTop', ConsoleTop)
 
 Vue.config.debug = true
 
@@ -35,10 +37,7 @@ auth.onAuthStateChanged((user) => {
                 next('/singin')
             }
         } else {
-            let auth = {
-                id: user.uid
-            }
-            to.params.user = auth
+            to.params.userId = user.uid
         }
 
     })

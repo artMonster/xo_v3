@@ -2,7 +2,7 @@
     <div class="GameArena">
         <div class="container-fluid">
             <div class="row no-gutters justify-content-center">
-                <div class="col-md-7">
+                <div class="col-md-6">
                     <div class="card">
                         <div class="card-header bg-info p-0">
                             <span class="px-3 text-white small">Ready: </span>
@@ -20,6 +20,10 @@
                                 <Loader v-if="loading" />
                             </b-list-group>
                         </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card">
                         <div class="card-footer text-center">
                             <game-board></game-board>
                         </div>

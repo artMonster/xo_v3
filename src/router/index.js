@@ -10,21 +10,27 @@ const routes = [{
         props: true,
         component: () =>
             import ('@/views/RoomsPage.vue')
-    },
-    {
-        path: '/room/:roomId',
-        name: 'Room',
+    }, {
+        path: '/r/:roomId',
+        name: 'TheRoom',
         meta: { layout: 'main' },
         props: true,
         component: () =>
-            import ('@/views/Game.vue')
+            import ('@/views/TheRoom.vue')
+    }, {
+        path: '/roomm/:roomId',
+        name: 'Roomm',
+        meta: { layout: 'main' },
+        props: true,
+        component: () =>
+            import ('@/views/RoomThis.vue')
     }, {
         path: '/g/:gameId',
         name: 'Game',
         meta: { layout: 'main' },
         props: true,
         component: () =>
-            import ('@/views/GamePage.vue')
+            import ('@/views/GameThis.vue')
     }, {
         path: '/singin',
         name: 'SingIn',

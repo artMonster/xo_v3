@@ -16,7 +16,7 @@
         label="Come up name"
         label-class="display-4 pb-4"
         label-for="title"
-        invalid-feedback="Title is required and must be 4-15 characters long.">
+        invalid-feedback="Title is required and must be 4-15 characters long!">
         <b-form-input autofocus
           class="form-control btn-lg"
           id="title"
@@ -59,21 +59,20 @@ export default {
       if (!this.checkFormValidity()) {
           return
         }
-      const user = this.$route.params.user
+      const userId = this.$route.params.userId
       
-      this.creatrRoomId = await this.createRoom({
+      this.createRoomId = await this.createRoom({
         title: this.title,
         lock: this.lock,
-        author: user.id
+        author: userId
       }).then(resp => { 
         return resp.key
       })
       
-      const resp = this.pushIncomming({roomId: this.creatrRoomId, userId: user.id }).then(resp => { return resp })
+      const resp = this.pushIncomming({roomId: this.createRoomId, userId: userId }).then(resp => { return resp })
       
       this.$nextTick(() => {
         this.$bvModal.hide("modal-prevent-closing")
-        
         this.$router.push({ name: 'Room', params: { roomId: this.creatrRoomId}}) 
       })
       this.title = ""

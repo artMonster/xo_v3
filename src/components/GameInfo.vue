@@ -7,7 +7,8 @@
        
         
         <div class="col-md-5 bg-secondary">
-          <p class="text-white pt-3 text-center small">RoomID : {{ roomId }} </p>
+          <p class="text-white m-0 pt-3 text-center small">id: {{ roomId }} </p>
+          <p class="text-white p-0 text-center small">author: {{ currentRoom.author }} </p>
           <div>
             <div class="row no-gutters justify-content-center align-items-end">
               <dd class="col-3 text-center mb-2">
@@ -30,6 +31,7 @@
           <div class="card">
             <div class="card-header bg-info p-0">
               <span class="px-3 text-white small">Ready: <b>{{ GetIncommingUsersReady.length }}</b></span>
+              <span>{{ currentRoom.games }} | {{ countDown }}</span>
             </div>
             <div class="card-body p-0">
                 <b-list-group>
@@ -42,8 +44,9 @@
                   <Loader v-if="loading"/>
                 </b-list-group>
             </div>
-            <div v-if="GetIncommingUsersReady.length > 1" class="card-footer text-center">
-              <game-form :theGame="theGame" :roomId="roomId"></game-form>
+            <div v-if="GetAuthUser.id === currentRoom.author" class="card-footer text-center">
+              <b-button  variant="primary" class="btn btn-lg" @click="newGameHandler">Start Game</b-button>
+              <!-- <game-form :theGame="theGame" :roomId="roomId"></game-form> -->
               <b-button v-if="GetIncommingUsersReady.length > 2"  variant="warning" class="btn btn-lg" @click="newArenaHandler"> *** Start tournaments *** </b-button>
             </div>
           </div>
@@ -55,8 +58,6 @@
 
 <script>
 import UserIncomming from "./UserIncomming.vue"
-import GameForm from "./GameForm.vue"
-
 
 import { mapGetters, mapActions, mapMutations } from 'vuex'
 
@@ -65,30 +66,64 @@ export default {
   data: () => ({
     loading: true,
     roomId: null,
-    room: [],
+    currentRoom: [],
     preGame: [],
-    theGame: [],
+    theGame: 0,
     selectSide: null,
+    roomIncommint: null,
+    option: {    
+        stride: 0,
+        score: [0,0],
+    },
+    countDown: 10,
+    createGameId: false,
   }),
-  components: { GameForm, UserIncomming },
-  computed: mapGetters(["GetAuthUser", "GetIncommingUsers", "GetIncommingUsersReady"]),
+  components: { UserIncomming },
+  computed: mapGetters(["GetAuthUser", "GetIncommingUsers", "GetIncommingUsersReady", "GetRoom", "gameInfo"]),
   methods: {
-    ...mapActions(["getRoomIncomming","pushIncomming", "switchUser"]),
+    ...mapActions(["createGame", "getRoomIncomming","pushIncomming", "switchUser", "getRoomData", "createGame"]),
+    ...mapMutations(["setGame"]),
     async ss(side) {
-      const userId = await this.$route.params.user.id
+      const userId = await this.$route.params.userId
       this.preGame = await this.pushIncomming({roomId: this.roomId, userId: userId, side: side })
     },
-    newArenaHandler() {
-        this.createGame({
-            option: this.option,
-            roomId: this.roomId,
-        })
-      },
+    async newGameHandler() {
+      
+      this.createGameId = await this.createGame({
+          usersArena: this.GetIncommingUsersReady,
+          option: this.option,
+          roomId: this.roomId,
+      }).then(resp => { 
+          return resp
+      })
+      return true       
     },
+  },
+  async updated() {
+    if(this.GetIncommingUsersReady.length > 1 && this.theGame === 0) {
+      await this.newGameHandler()
+      if (this.createGameId) {
+        console.log('gogame')
+        this.$router.push({ 
+          name: 'Game',
+            params: {
+            roomId: this.roomId,
+            gameId: this.createGameId
+          }
+        })
+      }
+      this.theGame = 1
+    }
+  },
   async mounted() {
+
     this.loading = true
+    if (this.createGameId) {
+      
+    }
     this.roomId = this.$route.params.roomId
-    await this.getRoomIncomming(this.roomId).then( resp => { return resp })
+    this.currentRoom = await this.getRoomData(this.roomId)
+    this.roomIncommint = await this.getRoomIncomming(this.roomId).then( resp => { return resp })
     this.loading = false
   }
 }

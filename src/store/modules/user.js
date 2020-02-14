@@ -10,97 +10,107 @@ export default {
                 return result
             })
         },
-        switchUser({ commit }, payload) {
-            try {
-                commit('switchUser', payload)
-            } catch (e) {
-                console.log(e)
-            }
-        },
-        async getUserData({ commit }, payload) {
-            var result = []
-            api.database.ref(`/users/${payload}`).on("value", function(snapshot) {
-                if (snapshot && snapshot.val()) {
-                    result = snapshot.val()
-                } else {
-                    result = snapshot
-                }
-                commit('setAuthUser', result)
-                return result
+        async takeUserAuth({ commit }) {
+            const userId = await api.auth.currentUser.uid
+            return await new Promise((resolve) => {
+                api.database.ref("users").child(userId).on("value", function(snapshot) {
+                    var result = snapshot.val()
+                    commit('SetAuthUser', result)
+                    resolve(result)
+                })
             })
+        },
+        async takeUserData({ commit }, userId) {
+            const res = await new Promise((resolve) => {
+                api.database.ref("users").child(userId).on("value", function(snapshot) {
+                    const result = snapshot.val()
+                    setTimeout(function() {
+                        resolve(result)
+                    }, 200)
+
+                })
+            })
+            return res
 
 
         },
-        async getUs2erData({ commit }, payload) {
-            try {
-                var result = []
-                const resp = await api.database.ref(`/users/${payload}`).on("value")
-                return resp
+        // return await new Promise((resolve) => {
+        //     api.database.ref("users")
+        //         .child(payload)
+        //         .on("value", snapshot => resolve(snapshot.val()))
+        // })
+        // switchUser({ commit }, payload) {
+        //     try {
+        //         commit('switchUser', payload)
+        //     } catch (e) {
+        //         console.log(e)
+        //     }
+        // },
 
-            } catch (e) {
-                console.log(e)
-            }
+        // async getUs2erData({ commit }, payload) {
+        //     try {
+        //         var result = []
+        //         const resp = await api.database.ref(`/users/${payload}`).on("value")
+        //         return resp
 
-            //return snapshot
-            //snapshot && snapshot.val() ? result = snapshot.val() : result = []
+        //     } catch (e) {
+        //         console.log(e)
+        //     }
 
-            //commit('setAuthUser', result)
-            //return result
-        },
-        async setUser({ commit, dispatch }, room) {
-            const userId = await dispatch('getUid')
-            const updateObj = {
-                ref: userId,
-                obj: {
-                    key: 'room',
-                    val: room
-                }
-            }
-            try {
-                // api.updateUser(updateObj, room => {
-                //     commit("switchRoom", room)
-                // })
-            } catch (e) {
-                console.log(e)
-            }
-        }
+        //     //return snapshot
+        //     //snapshot && snapshot.val() ? result = snapshot.val() : result = []
+
+        //     //commit('setAuthUser', result)
+        //     //return result
+        // },
+        // async setUser({ commit, dispatch }, room) {
+        //     const userId = await dispatch('getUid')
+        //     const updateObj = {
+        //         ref: userId,
+        //         obj: {
+        //             key: 'room',
+        //             val: room
+        //         }
+        //     }
+        //     try {
+        //         // api.updateUser(updateObj, room => {
+        //         //     commit("switchRoom", room)
+        //         // })
+        //     } catch (e) {
+        //         console.log(e)
+        //     }
+        // }
     },
     mutations: {
-        SetUsers(state, users) {
-            state.users = users
-        },
-        switchUser(state, user) {
-            state._cuid = user
-        },
-        SetIncommingUsers(state, users) {
-            state.incomming = users
-        },
-        setAuthUser(state, user) {
+        SetAuthUser(state, user) {
             state.authUser = user
+        },
+        SetUsers(state, users) {
+            state.users.unshift(users)
         }
     },
     state: {
         users: [],
-        incomming: [],
-        incommingReady: [],
+        authUser: [],
+        allusers: []
     },
     getters: {
         GetAllUsers(state) {
+            return state.allusers
+        },
+        GetUsers(state) {
             return state.users
         },
-        GetIncommingUsers(state) {
-            return state.incomming
-        },
-        GetIncommingUsersReady(state, getters) {
-            const obj = Object.entries(getters.GetIncommingUsers)
-            var arr = []
-            for (let [key, value] of obj) {
-                if (value.side !== 0) {
-                    arr.push(getters.GetIncommingUsers[key])
-                }
-            }
-            return state.incommingReady = arr
-        },
+        // GetIncommingUsersReady(state, getters) {
+        //     const obj = Object.entries(getters.GetIncommingUsers)
+        //     var arr = []
+        //     for (let [key, value] of obj) {
+        //         if (value.side !== 0) {
+        //             arr.push(getters.GetIncommingUsers[key])
+        //         }
+        //     }
+        //     return state.incommingReady = arr
+        // },
         GetAuthUser(state) {
             return state.authUser
         },
@@ -130,6 +140,7 @@ export default {
         //return { check }
 
 
+
         // state.incomming.forEach(({ check }) => {
         //         if (check.side) {
         //             return { check }
@@ -146,12 +157,12 @@ export default {
         //     }
         //     return result
         // })
-        checkedUser(state) {
-            return state._cuid
-        },
-        usersCount(state) {
-            return state.users.length
-        }
+        // checkedUser(state) {
+        //     return state._cuid
+        // },
+        // usersCount(state) {
+        //     return state.users.length
+        // }
 
     }
 }

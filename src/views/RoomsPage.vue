@@ -3,7 +3,7 @@
     <b-container fluid>
       <b-row class="no-gutters justify-content-md-center">
         <b-col cols="lg-6" class="mb-5">
-            <all-rooms></all-rooms> 
+            <all-rooms></all-rooms>
             <room-form></room-form>
         </b-col>
       </b-row>

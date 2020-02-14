@@ -1,10 +1,11 @@
 <template>
     <b-list-group>
+        <b-list-group-item>{{ GetAuthUser }}</b-list-group-item>
         <room
-            v-for="(room, index) in GetAllRooms"
-            :key="index"
+            v-for="room in GetRooms"
+            :key="room.id"
             :room="room"
-            :active="getIncommingUserCount(room)"
+            :active="0"
             :lock="room.lock"
             @select-room="selectRoom">
         </room>
@@ -18,27 +19,32 @@ export default {
     components: { Room },
     data: () => ({
         loading: false,
-        //rooms: []
     }),
-    computed: mapGetters(["GetAllRooms"]),
+    computed: {
+        ...mapGetters(["GetRooms", "GetAuthUser"]),
+    },
     methods: {
-        ...mapActions(["getRooms", "pushIncomming", "getUid"]),
-        getIncommingUserCount(room) {
-            var numb = []
-            if (room.incoming) {
-                numb = Object.keys(room.incoming)
-            }
-            return numb.length
-        },
-        async selectRoom({roomId, userId}) {
-            var user = await this.getUid()
-            const result = await this.pushIncomming({roomId: roomId, userId: userId }).then(resp => { return resp })
-            this.$router.push({ name: 'Room', params: { roomId: roomId}}) 
+        ...mapActions(["takeRooms", "pushLocation", "pushLocation2", "leaveLocation2"]),
+        // getIncommingUserCount(room) {
+        //     var numb = []
+        //     if (room.incoming) {
+        //         numb = Object.keys(room.incoming)
+        //     }
+        //     return numb.length
+        // },
+        async selectRoom(roomId) {
+            this.$router.push( { name: 'Room', params: { roomId: roomId }} )
         }
     },
     async mounted() {
         this.loading = true
-        await this.getRooms().then( resp => { return resp } )          
+        const roomId = this.$route.name
+        const ua = await this.pushLocation(roomId).then( resp => { return resp })
+        
+        //await this.leaveLocation2(roomId).then( resp => { return resp })
+        //await this.pushLocation2(roomId).then( resp => { return resp })
+        await this.takeRooms().then( resp => { return resp } )
+        
         this.loading = false
     },
 }
