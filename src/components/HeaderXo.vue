@@ -18,7 +18,7 @@
                 <span class="text-info">
                 <b-icon icon="person-fill" aria-hidden="true"></b-icon>
               </span>
-                 <span class="rounded-pill btn btn-outline-success">
+                 <span class="rounded-pill btn btn-outline-success btn-sm">
                     {{ GetAuthUser.id.slice(0, 3) }}
                 </span>                
               </a>
@@ -38,9 +38,13 @@
               <span class="text-success">
                 <small>  {{ $route.params.roomId }} </small>
               </span>
+              <span> • </span>
+              <span class="text-warning" v-if="$route.params.gameId" >
+                <small> {{ $route.params.gameId }} </small>
+              </span>
             </a>
           </li>
-          </ul>
+        </ul>
         <div class="navbar-collapse">
           <ul class="navbar-nav ml-auto align-items-center" id="navbarMain">
             <router-link v-if="$route.name !== `TheRoom`" :to="{ name: 'Home'}" v-slot="{ href, route, navigate }">
