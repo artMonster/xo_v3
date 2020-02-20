@@ -1,6 +1,6 @@
 <template>
-<div class="d-inline-block">
-  <b-button  variant="primary" class="btn btn-sm" v-b-modal.modal-prevent-closing> New Room </b-button>
+<li class="nav-item m-0">
+  <b-button variant="primary" class="btn btn-sm" v-b-modal.modal-prevent-closing> New Room </b-button>
   <b-modal ok-only centered
     id="modal-prevent-closing"
     ref="modal"
@@ -15,19 +15,19 @@
         :state="st"
         label="Come up name"
         label-class="display-4 pb-4"
-        label-for="title"
+        label-for="roomTitle"
         invalid-feedback="Title is required and must be 4-15 characters long!">
         <b-form-input autofocus
           class="form-control btn-lg"
-          id="title"
-          v-model="title"
+          id="roomTitle"
+          v-model="roomTitle"
           :state="st"
           required>
         </b-form-input>
       </b-form-group>
     </form>
   </b-modal>
-</div>
+</li>
 </template>
 
 <script>
@@ -36,7 +36,7 @@ export default {
   name: "RoomForm",
   data() {
     return {
-      title: "",
+      roomTitle: "",
       lock: false,
       st: null,
       submittedNames: [],
@@ -47,8 +47,8 @@ export default {
     ...mapActions(["createRoom", "pushIncomming"]),
     checkFormValidity() {
       let valid = this.$refs.form.checkValidity()
-      this.st = valid && this.title.length > 3 && this.title.length < 16
-      return valid && this.title.length > 3 && this.title.length < 16 ? true : false
+      this.st = valid && this.roomTitle.length > 3 && this.roomTitle.length < 16
+      return valid && this.roomTitle.length > 3 && this.roomTitle.length < 16 ? true : false
     },
 
     handleOk(bvModalEvt) {
@@ -62,20 +62,20 @@ export default {
       const userId = this.$route.params.userId
       
       this.createRoomId = await this.createRoom({
-        title: this.title,
+        roomTitle: this.roomTitle,
         lock: this.lock,
         author: userId
       }).then(resp => { 
         return resp.key
       })
       
-      const resp = this.pushIncomming({roomId: this.createRoomId, userId: userId }).then(resp => { return resp })
+      //const resp = this.pushIncomming({roomId: this.createRoomId, userId: userId }).then(resp => { return resp })
       
       this.$nextTick(() => {
         this.$bvModal.hide("modal-prevent-closing")
-        this.$router.push({ name: 'Room', params: { roomId: this.creatrRoomId}}) 
+        this.$router.push({ name: 'TheRoom', params: { roomId: this.createRoomId}}) 
       })
-      this.title = ""
+      this.roomTitle = ""
     },
   }
 }

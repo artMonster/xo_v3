@@ -218,9 +218,9 @@ export default {
                 resolve(resultR)
             })
         },
-        async createRoom({ commit }, { title, lock, author, timestamp = Date.now() }) {
+        async createRoom({ commit }, { roomTitle, lock, author, timestamp = Date.now() }) {
             try {
-                return await api.database.ref(`/rooms/`).push({ title, lock, author, timestamp }).then(resp => { return resp })
+                return await api.database.ref(`/rooms/`).push({ roomTitle, lock, author, timestamp }).then(resp => { return resp })
             } catch (e) {
                 commit('setError', e)
                 throw e

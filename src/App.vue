@@ -26,4 +26,8 @@ export default {
 .btn-outline-success {
   line-height: 1
 }
+
+body {
+  background-color: #212529;
+}
 </style>

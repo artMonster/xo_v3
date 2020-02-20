@@ -1,13 +1,13 @@
 <template>
     <div class="row">
-        <div class="col-6">
+        <div class="col-12 col-md-6">
             <b-list-group>
                 <room-item v-for="room of roomList" :key="room.id" :room="room" @switch-room="switchRoom"></room-item>
             </b-list-group>
         </div>
-        <div class="col-6">
+        <div class="col-12 col-md-6">
             <b-list-group>
-                <user-item v-for="user of userList" :key="user.id" :user="user"></user-item>
+                <user-items v-for="user of userList" :key="user.id" :user="user" :room="room" ></user-items>
             </b-list-group>
         </div>
     </div>
@@ -16,12 +16,12 @@
 <script>
 import * as api from '@/firebase/init'
 import RoomItem from './RoomItem.vue'
-import UserItem from './UserItem.vue'
+import UserItems from './UserItems.vue'
 
 export default {
     name: 'RoomList',
     components: {
-        RoomItem, UserItem
+        RoomItem, UserItems
     },
     methods: {
         fetchItems: async function (pref = 'rooms') {
@@ -40,10 +40,14 @@ export default {
                     }) 
                 )
             })
+            var del = ((resp) => {
+                api.database.ref(`games`).remove()
+            })
             re()
+            //del()
         },
         switchRoom: async function (roomId) {
-                this.$router.push({ name: 'TheRoom', params: { roomId: roomId }} )
+            this.$router.push({ name: 'TheRoom', params: { roomId: roomId }} )
         }
     },
     async mounted() {
@@ -55,7 +59,10 @@ export default {
     data() {
         return {
             roomList: [],
-            userList: []
+            userList: [],
+            room: {
+                id: 'Home'
+            }
         }
     }
     

@@ -2,7 +2,7 @@
     <header>
       <nav class="navbar navbar-expand navbar-dark bg-dark">
         
-        <ul class="navbar-nav">
+        <ul class="navbar-nav align-items-center">
           <router-link :to="{ name: 'SingOut' }" v-slot="{ href, navigate}">
               <li class="nav-item" >
                 <a class="nav-link" :href="href" @click="navigate">
@@ -12,23 +12,24 @@
                   </a>
               </li>
             </router-link>
-           <li class="nav-item">
-            <a class="nav-link">
-              <span class="text-info">
-                <b-icon icon="person-fill" aria-hidden="true"></b-icon>
-              </span>
-              <span class="text-info">
-                <small> {{ GetAuthUser.email }} </small>
-              </span>
-            </a>
-           </li>
+           
             <li class="nav-item">
               <a class="nav-link">
+                <span class="text-info">
+                <b-icon icon="person-fill" aria-hidden="true"></b-icon>
+              </span>
                  <span class="rounded-pill btn btn-outline-success">
                     {{ GetAuthUser.id.slice(0, 3) }}
                 </span>                
               </a>
             </li>
+            <li class="nav-item">
+            <a class="nav-link">
+              <span class="text-info">
+                <small> {{ GetAuthUser.email }} </small>
+              </span>
+            </a>
+           </li>
           <li class="nav-item">
             <a class="nav-link">
               <span class="text-success">
@@ -41,17 +42,13 @@
           </li>
           </ul>
         <div class="navbar-collapse">
-          <ul class="navbar-nav ml-auto" id="navbarMain">
+          <ul class="navbar-nav ml-auto align-items-center" id="navbarMain">
             <router-link v-if="$route.name !== `TheRoom`" :to="{ name: 'Home'}" v-slot="{ href, route, navigate }">
               <li class="router-link-active">
                 <a class="nav-link" :href="href" @click="navigate">Lobby</a>
               </li>
             </router-link>
-            <router-link v-if="$route.name !== `TheRoom`" :to="{ name: 'RoomsPlace'}" v-slot="{ href, route, navigate, isActive, isExactActive }">
-              <li :class="[isActive && 'router-link-active', isExactActive && 'router-link-exact-active']">
-                <a class="nav-link" :href="href" @click="navigate">Rooms Place</a>
-              </li>
-            </router-link>
+            <room-form v-if="GetAuthUser.emailVerified && $route.name !== `TheRoom` "/>
           </ul>
         </div>
       </nav>
@@ -62,18 +59,21 @@
 <script>
 
 import { mapGetters, mapActions } from 'vuex'
+import RoomForm from './RoomForm.vue'
 
 export default {
   name: 'HeaderXo',
   computed: mapGetters(['GetAuthUser']),
-
+  components: {
+    RoomForm
+  },
   methods: {
     
     ...mapActions(["pushLocation", "takeUserAuth", "leaveLocation2"]),
     leaveHandler() {
       const roomId = this.$route.params.roomId
-      const userId = this.$route.params.userId
-      this.leaveLocation2(roomId).then( resp => { return resp })
+      //const userId = this.$route.params.userId
+      //this.leaveLocation2(roomId).then( resp => { return resp })
       this.$router.push({ name: 'Home', params: { roomId: 'roomplace' }} )
       //this.leaveIncomming({ roomId: roomId, userId: userId })
       //

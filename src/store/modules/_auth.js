@@ -10,11 +10,14 @@ export default {
                 api.auth.signInWithEmailAndPassword(email, password).then((resp) => {
                     var obj = {
                         id: resp.user.uid,
-                        name: 'nickname',
+                        name: resp.user.displayName ? resp.user.displayName : 'noName',
                         email: resp.user.email,
-                        location: 'lobby',
+                        photoUrl: resp.user.photoURL ? resp.user.photoURL : 'img/defaultphoto.png',
+                        emailVerified: resp.user.emailVerified,
+                        location: 'Home',
                         timestamp: Date.now(),
                     }
+                    console.log(resp)
                     api.database.ref('/users/' + obj.id).set(obj)
                     commit('SetAuthUser', obj)
                     resolve(obj)

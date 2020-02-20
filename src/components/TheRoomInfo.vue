@@ -1,18 +1,43 @@
 <template>
-    <div class="row justify-content-center">
-        <div class="col-10 py-3 text-right">
-            <button class="btn btn-primary" @click="leaveRoom">Leave to Place <b-icon icon="box-arrow-right" aria-hidden="true"></b-icon></button>
+    <section class="container">
+    
+        <div class="row justify-content-center">
+            <div class="col-12 py-3 text-right">
+                <button class="btn btn-primary" @click="leaveRoom">Leave to Place <b-icon icon="box-arrow-right" aria-hidden="true"></b-icon></button>
+            </div>
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row align-items-center">
+                            <div class="col-12 col-md-1 text-right">
+                                <span class="display-4 m-0 p-0" style="line-height: 0.8;">{{ roomIncoming.length }}</span>
+                            </div>
+                            <div class="col-12 col-md-5">
+                                <p class="h4 mb-2">{{ roomInfo.roomTitle }}</p>
+                                <span class="text-info">
+                                    <b-icon icon="person-fill" aria-hidden="true"></b-icon>
+                                </span>
+                                <span class="rounded-pill btn btn-outline-success">
+                                    {{ roomInfo.author ? roomInfo.author.slice(0, 3): '' }}
+                                </span>
+                            </div>
+                            <div class="col-12 col-md-6 text-right">
+                                <p class="h5">ID: {{ $route.params.roomId }}</p>
+                                <span>{{ roomInfo.timestamp }}</span>
+                            </div>
+                        </div>
+                        <Loader v-if="loading" />
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 mt-4">
+                <b-list-group> <!-- v-on:remove="roomIncoming.splice(index, 1)"  -->
+                    <user-item v-for="user in roomIncoming" :key="user.id" :userready="user.ready" :userincoming="user" :room="roomInfo"></user-item>
+                </b-list-group>
+            </div>
         </div>
-        <div class="col-10">
-            {{ roomInfo }}
-        </div>
-        <div class="col-10 mt-4">
-             {{ userInRoomList }}
-            <b-list-group>
-                <user-item v-for="(user, index) of userInRoomList" :key="index" :user="user" @choice-side="choiceSide"></user-item>
-            </b-list-group>
-        </div>
-    </div>
+        
+    </section>
 </template>
 
 <script>
@@ -20,78 +45,139 @@ import * as api from '@/firebase/init'
 import RoomItem from './RoomItem.vue'
 import UserItem from './UserItem.vue'
 
+var _ = require('lodash');
+
 export default {
     name: 'TheRoomInfo',
     components: {
         RoomItem, UserItem
     },
-    methods: {
-        fetchItem: async function () {
+    async updated() {
+        if (this.roomIncoming && this.roomIncoming[0].ready && this.roomIncoming[1].ready && this.newGameId === 0) {           
+            const nG = (id = false) => {
+                if (this.roomInfo.author === this.$route.params.userId) {
 
-            const tr = this.$route.params.roomId
-
-            const com = (ctx) => {
-                var ur = []
-                if (ctx){
-                    ur = Object.keys(ctx)
-                    this.userInRoomList = []
-                    for (let index = 0; index < ur.length; index++) {
-                        gu(ur[index])
+                    var createGameObj = {
+                        usersArena: this.roomIncoming,
+                        option: {
+                            stride: 0,
+                            score: [0,0],
+                        },
+                        board: {
+                            steps: [
+                                [0, 0, 0, 0, 0, 0, 0, 0, 0]
+                            ],
+                            current: [0, 0, 0, 0, 0, 0, 0, 0, 0],
+                        },
+                        timestamp: Date.now(),
                     }
-                    this.roomInfo = ctx ? [ctx] : []
+
+                    this.newGameId = api.database.ref().child('games').push().key
+
+                    var upd = {}
+                        upd['/games/' + this.newGameId] = createGameObj
+                        //upd['/users/' + this.roomIncoming[0].id + '/gameId/'] = this.newGameId
+                        //upd['/users/' + this.roomIncoming[1].id + '/gameId/'] = this.newGameId
+                        upd['/rooms/' + this.$route.params.roomId + '/games/'] = this.newGameId
+                    
+                        api.database.ref().update(upd)
+                    
+                    return this.newGameId
+                
+                } else {
+                    
+                        return api.database.ref(`/rooms/` + this.$route.params.roomId + `/games/`).once('value').then( function(snapshot) {
+                            console.log(snapshot.val())
+                            //dis(snapshot.val())
+                            return snapshot.val()
+                        })
+
+                }
+                    
+            }
+            
+            this.loading = false
+            await this.$router.push({ 
+                name: 'Game',
+                params: {
+                    roomId: this.$route.params.roomId,
+                    userId: this.$route.params.userId,
+                    gameId: await nG()
+                }
+            })
+            
+            
+
+            
+            
+            
+        } else {
+            console.log(this.ready)
+        }
+    },
+    methods: {
+        fetchThisRoom: async function (roomid) {
+            const dis = (res) => {
+                if (this.ready !== 2) {
+                    this.roomInfo = res
+                    if (res && res.incoming ) {
+                        var rI = res.incoming
+                        var arr = []
+                        for (let [key, value] of Object.entries(rI)) {
+                            
+                            arr.push({
+                                id: key,
+                                ready: value.ready,
+                                timestamp: value.timestamp
+                            })
+                            if (value.ready) {
+                                this.ready++
+                            }
+                            
+                        }
+                        this.roomIncoming = []
+                        this.roomIncoming = arr
+                    }
                 }
             }
-            
-            const dis = (res) => {
-                this.userInRoomList.push(res)
-            }
-
-            var gu = ((resp) => {
-                 api.database.ref(`users/` + resp).on('value', (
-                     function(snapshot) {
-                         var itemList = snapshot && snapshot.val() ? snapshot.val() : []
-                         dis(itemList)
-                     }) 
-                 )
-            })
-
-            var re = ((resp) => {
-                api.database.ref(`rooms/` + tr).on('value', (
+            const go = (id) => {
+                api.database.ref(`/rooms/` + id).on('value', 
                     function(snapshot) {
-                        var itemListIncomming = snapshot && snapshot.val().incoming ? snapshot.val().incoming : []
-                        com(itemListIncomming)
-                    }) 
+                        if (snapshot && snapshot.val()) {
+                            dis(snapshot.val())
+                        }
+                    }
                 )
-            })
-            re()
+            }
+            await go(roomid)
         },
-        choiceSide: function (roomId) {
-
-        },
-        switchRoom: async function () {
-            const roomId = this.$route.params.roomId
-            const userId = this.$route.params.userId
+        switchRoom: async function (roomId, userId) {
             let upd = {}
-                upd["/rooms/" + roomId + "/incoming/" + userId] = { timestamp: Date.now() }
-            await api.database.ref().update(upd)
+                upd[`rooms/` + roomId + `/incoming/` + userId] = { timestamp: Date.now(), ready: false }
+            return await api.database.ref().update(upd)
+            
         },
-        leaveRoom: function () {
+        leaveRoom: async function () {
             const roomId = this.$route.params.roomId
             const userId = this.$route.params.userId
-            
-            api.database.ref("/rooms/" + roomId + "/incoming/" + userId).remove()
-            this.$router.push({ name: 'Home', params: { roomId: 'home' } })
+            api.database.ref( `rooms/` + roomId + `/incoming/` + userId ).remove()
+            this.$router.push( { name: `Home`, params: { roomId: `Home` } } )
         },
     },
     async mounted() {
-        await this.switchRoom()
-        this.fetchItem()
+        var q = await this.switchRoom( this.$route.params.roomId, this.$route.params.userId )
+        const ww = await this.fetchThisRoom(this.$route.params.roomId)
+        this.loading = false
+        
     },
     data() {
         return {
-            me: null,
+            ready: 0,
             roomInfo: [],
-            userInRoomList: []
+            roomIncoming: [],
+            userInRoomList: [],
+            loading: true,
+            newGameId: 0
         }
     }
     
