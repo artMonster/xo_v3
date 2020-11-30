@@ -19,7 +19,7 @@
                 <b-icon icon="person-fill" aria-hidden="true"></b-icon>
               </span>
                  <span class="rounded-pill btn btn-outline-success btn-sm">
-                    {{ GetAuthUser.id.slice(0, 3) }}
+                    {{ GetAuthUser && GetAuthUser.id ? GetAuthUser.id.slice(0, 3) : '' }}
                 </span>                
               </a>
             </li>
@@ -38,21 +38,20 @@
               <span class="text-success">
                 <small>  {{ $route.params.roomId }} </small>
               </span>
-              <span> • </span>
               <span class="text-warning" v-if="$route.params.gameId" >
-                <small> {{ $route.params.gameId }} </small>
+                <small>• {{ $route.params.gameId }} </small>
               </span>
             </a>
           </li>
         </ul>
         <div class="navbar-collapse">
           <ul class="navbar-nav ml-auto align-items-center" id="navbarMain">
-            <router-link v-if="$route.name !== `TheRoom`" :to="{ name: 'Home'}" v-slot="{ href, route, navigate }">
+            <router-link v-if="$route.name === `TheRoom`" :to="{ name: 'Home'}" v-slot="{ href, route, navigate }">
               <li class="router-link-active">
                 <a class="nav-link" :href="href" @click="navigate">Lobby</a>
               </li>
             </router-link>
-            <room-form v-if="GetAuthUser.emailVerified && $route.name !== `TheRoom` "/>
+            <room-form v-if="GetAuthUser.emailVerified && $route.name === `TheRoom` "/>
           </ul>
         </div>
       </nav>

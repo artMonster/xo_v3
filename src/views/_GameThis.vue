@@ -22,15 +22,17 @@
                 </div>
             </div>
         </div> -->
-        <game-arena></game-arena>
+        <game-info></game-info>
     </section>
 </template>
 <script>
-import GameArena from '@/components/GameArena'
+
+import GameInfo from '@/components/GameInfo'
+//import GameArena from '@/components/GameArena'
 
 export default {
   name: 'GamePage',
-  components: { GameArena }
+  components: { GameInfo }
 }
 
 </script>

@@ -31,10 +31,10 @@
                 </div>
             </div>
             <div class="col-12 mt-4">
-                <b-list-group> <!-- v-on:remove="roomIncoming.splice(index, 1)"  -->
+                <b-list-group>
                     <user-item 
                         v-for = "user in roomIncoming"
-                        :key = "user.id"
+                        :key = "user.timestamp"
                         :isAuthor = "roomInfo.author === user.id"
                         :userincoming = "user"
                         :userAuth = "$route.params.userId"
@@ -66,6 +66,8 @@ export default {
 
             if (this.roomIncoming[0].ready && this.roomIncoming[1].ready && this.newGameId === 0) {
 
+                this.loading = true
+
                 const nG = (id) => {
 
                     var createGameObj = {
@@ -76,9 +78,9 @@ export default {
                         },
                         board: {
                             steps: [
-                                [0, 0, 0, 0, 0, 0, 0, 0, 0]
+                                [8, 8, 8, 8, 8, 8, 8, 8, 8]
                             ],
-                            current: [0, 0, 0, 0, 0, 0, 0, 0, 0],
+                            current: [8, 8, 8, 8, 8, 8, 8, 8, 8],
                         },
                         timestamp: Date.now(),
                     }
@@ -87,16 +89,12 @@ export default {
 
                     var upd = {}
                         upd['/games/' + this.newGameId] = createGameObj
-                        //upd['/users/' + this.roomIncoming[0].id + '/gameId/'] = this.newGameId
-                        //upd['/users/' + this.roomIncoming[1].id + '/gameId/'] = this.newGameId
                         upd['/rooms/' + id + '/games/'] = this.newGameId
                     
                         api.database.ref().update(upd)
                     
                     return this.newGameId
                 }
-            
-                this.loading = false
 
                 if (this.roomInfo.author === this.$route.params.userId) {
 
@@ -114,7 +112,6 @@ export default {
                 } else {
 
                     var routeJoin = (gameId) => {
-                        console.log(gameId)
                         this.$nextTick(() => {
                             this.$router.push({ 
                                 name: 'Game',
@@ -136,38 +133,36 @@ export default {
                 }
 
             } else {
-                //console.log(this.roomIncoming)
-                ////console.log(this.roomIncoming[0].ready)
-                //console.log(this.roomIncoming[1].ready)
-                //console.log(this.newGameId)
-                
+
+                this.loading = false
+
             }
         }
     },
     methods: {
         fetchThisRoom: async function (roomid) {
             const dis = (res) => {
-                //if (this.ready !== 2) {
-                    this.roomInfo = res
-                    if (res && res.incoming ) {
-                        var rI = res.incoming
-                        var arr = []
-                        for (let [key, value] of Object.entries(rI)) {
-                            
-                            arr.push({
-                                id: key,
-                                ready: value.ready,
-                                timestamp: value.timestamp
-                            })
-                            if (value.ready) {
-                                this.ready++
-                            }
-                            
+                this.roomInfo = res
+                if (res && res.incoming ) {
+                    var rI = res.incoming
+                    var arr = []
+                    for (let [key, value] of Object.entries(rI)) {
+                        
+                        console.log(value.ready)
+
+                        arr.push({
+                            id: key,
+                            ready: value.ready,
+                            timestamp: value.timestamp
+                        })
+                        
+                        if (value.ready) {
+                            this.ready++
                         }
-                        this.roomIncoming = []
-                        this.roomIncoming = arr
+                        
                     }
-                //}
+                    this.roomIncoming = arr
+                }
             }
             const go = (id) => {
                 api.database.ref(`/rooms/` + id).on('value', 
