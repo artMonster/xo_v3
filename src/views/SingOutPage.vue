@@ -11,7 +11,8 @@ export default {
   async mounted() {
     try {
       await this.$store.dispatch('logout')
-    } catch (e) {}
+    } catch (e) {
+    }
   },
 }
-</Script>
+</script>

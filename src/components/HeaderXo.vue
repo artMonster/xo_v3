@@ -3,16 +3,7 @@
       <nav class="navbar navbar-expand navbar-dark bg-dark">
         
         <ul class="navbar-nav align-items-center">
-          <router-link :to="{ name: 'SingOut' }" v-slot="{ href, navigate}">
-              <li class="nav-item" >
-                <a class="nav-link" :href="href" @click="navigate">
-                  <span>
-                    <b-icon icon="box-arrow-right" aria-hidden="true"></b-icon>
-                  </span>
-                  </a>
-              </li>
-            </router-link>
-           
+          <button class="btn btn-danger btn-sm" @click="logOut"><b-icon icon="box-arrow-right" aria-hidden="true"></b-icon></button>           
             <li class="nav-item">
               <a class="nav-link">
                 <span class="text-info">
@@ -26,7 +17,7 @@
             <li class="nav-item">
             <a class="nav-link">
               <span class="text-info">
-                <small> {{ GetAuthUser.email }} </small>
+                <small> {{ GetAuthUser && GetAuthUser.email ? GetAuthUser.email : '' }} </small>
               </span>
             </a>
            </li>
@@ -46,12 +37,7 @@
         </ul>
         <div class="navbar-collapse">
           <ul class="navbar-nav ml-auto align-items-center" id="navbarMain">
-            <router-link v-if="$route.name === `TheRoom`" :to="{ name: 'Home'}" v-slot="{ href, route, navigate }">
-              <li class="router-link-active">
-                <a class="nav-link" :href="href" @click="navigate">Lobby</a>
-              </li>
-            </router-link>
-            <room-form v-if="GetAuthUser.emailVerified && $route.name === `TheRoom` "/>
+            <room-form v-if="GetAuthUser && GetAuthUser.emailVerified && $route.name !== `TheRoom` && $route.name !== `SingOut` " />
           </ul>
         </div>
       </nav>
@@ -62,6 +48,7 @@
 <script>
 
 import { mapGetters, mapActions } from 'vuex'
+import * as api from '@/firebase/init'
 import RoomForm from './RoomForm.vue'
 
 export default {
@@ -73,6 +60,12 @@ export default {
   methods: {
     
     ...mapActions(["pushLocation", "takeUserAuth", "leaveLocation2"]),
+    logOut: async function () {
+            const roomId = this.$route.params.roomId
+            const userId = this.$route.params.userId
+            api.database.ref( `users/` + userId).remove()
+            this.$router.push( { name: `SingOut`, params: { roomId: `Home` } } )
+        },
     leaveHandler() {
       const roomId = this.$route.params.roomId
       //const userId = this.$route.params.userId
